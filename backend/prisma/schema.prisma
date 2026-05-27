@@ -23,6 +23,8 @@ model Medicine {
   purchasePrice  Float
   sellingPrice   Float
   quantity       Int
+
+  purchases Purchase[]
 }
 
 model Supplier {
@@ -30,4 +32,18 @@ model Supplier {
   name    String
   contact String
   address String
+
+  purchases Purchase[]
+}
+
+model Purchase {
+  id          Int      @id @default(autoincrement())
+  medicineId  Int
+  supplierId  Int
+  quantity    Int
+  totalPrice  Float
+  purchaseDate DateTime @default(now())
+
+  medicine Medicine @relation(fields: [medicineId], references: [id])
+  supplier Supplier @relation(fields: [supplierId], references: [id])
 }
