@@ -7,13 +7,14 @@ const medicineRoutes = require('./routes/medicineRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
 const salesRoutes = require('./routes/salesRoutes');
-
+const inventoryRoutes = require('./routes/inventoryRoutes');
 
 
 app.use('/api/medicines', medicineRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/sales', salesRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 app.get('/', (req, res) => {
     res.send('Pharmacy Inventory API Running...');
