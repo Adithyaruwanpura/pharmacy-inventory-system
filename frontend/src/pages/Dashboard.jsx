@@ -7,6 +7,7 @@ import SupplierSection from '../components/SupplierSection';
 import PurchaseSection from '../components/PurchaseSection';
 import SalesSection from '../components/SalesSection';
 import InventoryAlerts from '../components/InventoryAlerts';
+import DashboardStats from '../components/DashboardStats';
 
 function Dashboard() {
 
@@ -58,6 +59,7 @@ function Dashboard() {
                         Dashboard
                     </li>
 
+
                     <li className="hover:bg-blue-700 p-2 rounded cursor-pointer">
                         Medicines
                     </li>
@@ -84,6 +86,8 @@ function Dashboard() {
                 <h1 className="text-3xl font-bold mb-8">
                     Dashboard
                 </h1>
+
+                <DashboardStats />
 
                 {/* STATS CARDS */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
