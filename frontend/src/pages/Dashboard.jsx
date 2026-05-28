@@ -3,11 +3,13 @@ import axios from 'axios';
 
 import MedicineList from '../components/MedicineList';
 import MedicineForm from '../components/MedicineForm';
+import SupplierSection from '../components/SupplierSection';
 
 function Dashboard() {
 
     const [medicines, setMedicines] = useState([]);
 
+    // FETCH MEDICINES
     const fetchMedicines = async () => {
 
         try {
@@ -38,43 +40,112 @@ function Dashboard() {
 
     return (
 
-        <div style={{ display: 'flex' }}>
+        <div className="flex min-h-screen bg-gray-100">
 
             {/* SIDEBAR */}
-            <div
-                style={{
-                    width: '220px',
-                    background: '#f0f0f0',
-                    height: '100vh',
-                    padding: '20px'
-                }}
-            >
+            <div className="w-64 bg-blue-900 text-white p-6">
 
-                <h2>Pharmacy System</h2>
+                <h2 className="text-2xl font-bold mb-10">
+                    Pharmacy System
+                </h2>
 
-                <ul style={{ listStyle: 'none', padding: 0 }}>
-                    <li>Dashboard</li>
-                    <li>Medicines</li>
-                    <li>Suppliers</li>
-                    <li>Sales</li>
-                    <li>Purchases</li>
+                <ul className="space-y-4">
+
+                    <li className="hover:bg-blue-700 p-2 rounded cursor-pointer">
+                        Dashboard
+                    </li>
+
+                    <li className="hover:bg-blue-700 p-2 rounded cursor-pointer">
+                        Medicines
+                    </li>
+
+                    <li className="hover:bg-blue-700 p-2 rounded cursor-pointer">
+                        Suppliers
+                    </li>
+
+                    <li className="hover:bg-blue-700 p-2 rounded cursor-pointer">
+                        Sales
+                    </li>
+
+                    <li className="hover:bg-blue-700 p-2 rounded cursor-pointer">
+                        Purchases
+                    </li>
+
                 </ul>
 
             </div>
 
             {/* MAIN CONTENT */}
-            <div style={{ flex: 1, padding: '20px' }}>
+            <div className="flex-1 p-8 overflow-y-auto">
 
-                <h1>Dashboard</h1>
+                <h1 className="text-3xl font-bold mb-8">
+                    Dashboard
+                </h1>
 
-                <MedicineForm fetchMedicines={fetchMedicines} />
+                {/* STATS CARDS */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
-                <br /><br />
+                    <div className="bg-white p-6 rounded shadow">
+                        <h3 className="text-gray-500 text-sm">
+                            Total Medicines
+                        </h3>
 
-                <MedicineList
-                    medicines={medicines}
-                    fetchMedicines={fetchMedicines}
-                />
+                        <p className="text-3xl font-bold">
+                            {medicines.length}
+                        </p>
+                    </div>
+
+                    <div className="bg-white p-6 rounded shadow">
+                        <h3 className="text-gray-500 text-sm">
+                            Low Stock Items
+                        </h3>
+
+                        <p className="text-3xl font-bold text-red-500">
+                            {
+                                medicines.filter(
+                                    medicine => medicine.quantity <= 10
+                                ).length
+                            }
+                        </p>
+                    </div>
+
+                    <div className="bg-white p-6 rounded shadow">
+                        <h3 className="text-gray-500 text-sm">
+                            Inventory Status
+                        </h3>
+
+                        <p className="text-3xl font-bold text-green-600">
+                            Active
+                        </p>
+                    </div>
+
+                </div>
+
+                {/* MEDICINE FORM */}
+                <div className="bg-white p-6 rounded shadow mb-8">
+
+                    <MedicineForm
+                        fetchMedicines={fetchMedicines}
+                    />
+
+                </div>
+
+                {/* MEDICINE TABLE */}
+                <div className="bg-white p-6 rounded shadow mb-8">
+
+                    <MedicineList
+                        medicines={medicines}
+                        fetchMedicines={fetchMedicines}
+                    />
+
+                </div>
+
+                {/* SUPPLIER SECTION */}
+                <div className="bg-white p-6 rounded shadow">
+
+                    <SupplierSection />
+
+                </div>
 
             </div>
 
