@@ -4,6 +4,9 @@ import axios from 'axios';
 import MedicineList from '../components/MedicineList';
 import MedicineForm from '../components/MedicineForm';
 import SupplierSection from '../components/SupplierSection';
+import PurchaseSection from '../components/PurchaseSection';
+import SalesSection from '../components/SalesSection';
+import InventoryAlerts from '../components/InventoryAlerts';
 
 function Dashboard() {
 
@@ -145,6 +148,18 @@ function Dashboard() {
 
                     <SupplierSection />
 
+                </div>
+
+                <div className="bg-white p-6 rounded shadow mb-8">
+                    <PurchaseSection />
+                </div>
+
+                <div className="bg-white p-6 rounded shadow mb-8">
+                    <SalesSection />
+                </div>
+
+                <div className="bg-white p-6 rounded shadow">
+                    <InventoryAlerts />
                 </div>
 
             </div>
