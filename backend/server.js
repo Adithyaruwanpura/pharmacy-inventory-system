@@ -1,6 +1,9 @@
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 const medicineRoutes = require('./routes/medicineRoutes');
@@ -9,7 +12,6 @@ const purchaseRoutes = require('./routes/purchaseRoutes');
 const salesRoutes = require('./routes/salesRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const authRoutes = require('./routes/authRoutes');
-
 
 app.use('/api/medicines', medicineRoutes);
 app.use('/api/suppliers', supplierRoutes);
