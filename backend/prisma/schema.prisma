@@ -25,6 +25,7 @@ model Medicine {
   quantity       Int
 
   purchases Purchase[]
+  sales Sale[]
 }
 
 model Supplier {
@@ -46,4 +47,14 @@ model Purchase {
 
   medicine Medicine @relation(fields: [medicineId], references: [id])
   supplier Supplier @relation(fields: [supplierId], references: [id])
+}
+
+model Sale {
+  id         Int      @id @default(autoincrement())
+  medicineId Int
+  quantity   Int
+  totalPrice Float
+  saleDate   DateTime @default(now())
+
+  medicine Medicine @relation(fields: [medicineId], references: [id])
 }
