@@ -1,10 +1,36 @@
-import MedicineList from '../components/MedicineList';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+import MedicineList from '../components/MedicineList';
+import MedicineForm from '../components/MedicineForm';
+
 function Dashboard() {
 
+    const [medicines, setMedicines] = useState([]);
+
+    const fetchMedicines = async () => {
+
+        try {
+
+            const response = await axios.get(
+                'http://localhost:5000/api/medicines'
+            );
+
+            setMedicines(response.data.data);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+    };
+
+    useEffect(() => {
+        fetchMedicines();
+    }, []);
+
     return (
+
         <div style={{ display: 'flex' }}>
 
             {/* SIDEBAR */}
@@ -16,6 +42,7 @@ function Dashboard() {
                     padding: '20px'
                 }}
             >
+
                 <h2>Pharmacy System</h2>
 
                 <ul style={{ listStyle: 'none', padding: 0 }}>
@@ -25,13 +52,19 @@ function Dashboard() {
                     <li>Sales</li>
                     <li>Purchases</li>
                 </ul>
+
             </div>
 
             {/* MAIN CONTENT */}
             <div style={{ flex: 1, padding: '20px' }}>
-                <h1>Dashboard</h1>
-                <MedicineList />
 
+                <h1>Dashboard</h1>
+
+                <MedicineForm fetchMedicines={fetchMedicines} />
+
+                <br /><br />
+
+                <MedicineList medicines={medicines} />
 
             </div>
 

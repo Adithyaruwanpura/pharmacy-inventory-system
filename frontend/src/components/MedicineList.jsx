@@ -22,6 +22,33 @@ function MedicineList() {
         }
     };
 
+    // DELETE MEDICINE
+    const deleteMedicine = async (id) => {
+
+        try {
+
+            const token = localStorage.getItem('token');
+
+            await axios.delete(
+                `http://localhost:5000/api/medicines/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            alert('Medicine deleted');
+
+            fetchMedicines();
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+    };
+
     useEffect(() => {
         fetchMedicines();
     }, []);
@@ -35,12 +62,15 @@ function MedicineList() {
             <table border="1" cellPadding="10">
 
                 <thead>
+
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Category</th>
                         <th>Quantity</th>
+                        <th>Actions</th>
                     </tr>
+
                 </thead>
 
                 <tbody>
@@ -48,10 +78,24 @@ function MedicineList() {
                     {medicines.map((medicine) => (
 
                         <tr key={medicine.id}>
+
                             <td>{medicine.id}</td>
                             <td>{medicine.name}</td>
                             <td>{medicine.category}</td>
                             <td>{medicine.quantity}</td>
+
+                            <td>
+
+                                <button
+                                    onClick={() =>
+                                        deleteMedicine(medicine.id)
+                                    }
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
                         </tr>
 
                     ))}
