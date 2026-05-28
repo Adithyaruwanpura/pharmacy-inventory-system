@@ -9,8 +9,15 @@ function MedicineList() {
 
         try {
 
+            const token = localStorage.getItem('token');
+
             const response = await axios.get(
-                'http://localhost:5000/api/medicines'
+                'http://localhost:5000/api/medicines',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
 
             setMedicines(response.data.data);
