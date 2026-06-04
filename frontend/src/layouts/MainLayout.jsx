@@ -1,93 +1,207 @@
-import { Outlet, Link } from 'react-router-dom';
+import {
+    Outlet,
+    NavLink,
+    useLocation
+} from 'react-router-dom';
 
 function MainLayout() {
+
+    const location = useLocation();
+
+    // GET CURRENT PAGE NAME
+    const pageName =
+        location.pathname.replace('/', '') || 'dashboard';
 
     return (
 
         <div className="flex min-h-screen bg-gray-100">
 
             {/* SIDEBAR */}
-            <div className="w-64 bg-blue-900 text-white p-6">
+            <div className="w-64 bg-blue-900 text-white p-6 flex flex-col">
 
-                <h2 className="text-2xl font-bold mb-10">
-                    Pharmacy System
-                </h2>
+                {/* LOGO */}
+                <div>
 
-                <ul className="space-y-4">
+                    <h2 className="text-2xl font-bold mb-10">
+                        Pharmacy System
+                    </h2>
 
-                    <li>
-                        <Link
-                            to="/dashboard"
-                            className="block hover:bg-blue-700 p-2 rounded"
-                        >
-                            Dashboard
-                        </Link>
-                    </li>
+                    <ul className="space-y-3">
 
-                    <li>
-                        <Link
-                            to="/medicines"
-                            className="block hover:bg-blue-700 p-2 rounded"
-                        >
-                            Medicines
-                        </Link>
-                    </li>
+                        {/* DASHBOARD */}
+                        <li>
 
-                    <li>
-                        <Link
-                            to="/suppliers"
-                            className="block hover:bg-blue-700 p-2 rounded"
-                        >
-                            Suppliers
-                        </Link>
-                    </li>
+                            <NavLink
+                                to="/dashboard"
+                                className={({ isActive }) =>
+                                    `block p-3 rounded transition ${isActive
+                                        ? 'bg-white text-blue-900 font-bold'
+                                        : 'hover:bg-blue-700'
+                                    }`
+                                }
+                            >
+                                Dashboard
+                            </NavLink>
 
-                    <li>
-                        <Link
-                            to="/purchases"
-                            className="block hover:bg-blue-700 p-2 rounded"
-                        >
-                            Purchases
-                        </Link>
-                    </li>
+                        </li>
 
-                    <li>
-                        <Link
-                            to="/sales"
-                            className="block hover:bg-blue-700 p-2 rounded"
-                        >
-                            Sales
-                        </Link>
-                    </li>
+                        {/* MEDICINES */}
+                        <li>
 
-                    <li>
-                        <Link
-                            to="/alerts"
-                            className="block hover:bg-blue-700 p-2 rounded"
-                        >
-                            Alerts
-                        </Link>
-                    </li>
+                            <NavLink
+                                to="/medicines"
+                                className={({ isActive }) =>
+                                    `block p-3 rounded transition ${isActive
+                                        ? 'bg-white text-blue-900 font-bold'
+                                        : 'hover:bg-blue-700'
+                                    }`
+                                }
+                            >
+                                Medicines
+                            </NavLink>
 
-                </ul>
+                        </li>
 
-                {/* LOGOUT */}
-                <button
-                    onClick={() => {
-                        localStorage.removeItem('token');
-                        window.location.href = '/';
-                    }}
-                    className="mt-10 bg-red-500 px-4 py-2 rounded w-full"
-                >
-                    Logout
-                </button>
+                        {/* SUPPLIERS */}
+                        <li>
+
+                            <NavLink
+                                to="/suppliers"
+                                className={({ isActive }) =>
+                                    `block p-3 rounded transition ${isActive
+                                        ? 'bg-white text-blue-900 font-bold'
+                                        : 'hover:bg-blue-700'
+                                    }`
+                                }
+                            >
+                                Suppliers
+                            </NavLink>
+
+                        </li>
+
+                        {/* PURCHASES */}
+                        <li>
+
+                            <NavLink
+                                to="/purchases"
+                                className={({ isActive }) =>
+                                    `block p-3 rounded transition ${isActive
+                                        ? 'bg-white text-blue-900 font-bold'
+                                        : 'hover:bg-blue-700'
+                                    }`
+                                }
+                            >
+                                Purchases
+                            </NavLink>
+
+                        </li>
+
+                        {/* SALES */}
+                        <li>
+
+                            <NavLink
+                                to="/sales"
+                                className={({ isActive }) =>
+                                    `block p-3 rounded transition ${isActive
+                                        ? 'bg-white text-blue-900 font-bold'
+                                        : 'hover:bg-blue-700'
+                                    }`
+                                }
+                            >
+                                Sales
+                            </NavLink>
+
+                        </li>
+
+                        {/* ALERTS */}
+                        <li>
+
+                            <NavLink
+                                to="/alerts"
+                                className={({ isActive }) =>
+                                    `block p-3 rounded transition ${isActive
+                                        ? 'bg-white text-blue-900 font-bold'
+                                        : 'hover:bg-blue-700'
+                                    }`
+                                }
+                            >
+                                Alerts
+                            </NavLink>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                {/* LOGOUT BUTTON */}
+                <div className="mt-auto">
+
+                    <button
+                        onClick={() => {
+                            localStorage.removeItem('token');
+                            window.location.href = '/';
+                        }}
+                        className="bg-red-500 hover:bg-red-600 transition px-4 py-3 rounded w-full"
+                    >
+                        Logout
+                    </button>
+
+                </div>
 
             </div>
 
-            {/* PAGE CONTENT */}
-            <div className="flex-1 p-8 overflow-y-auto">
+            {/* MAIN CONTENT */}
+            <div className="flex-1 flex flex-col">
 
-                <Outlet />
+                {/* TOP NAVBAR */}
+                <div className="bg-white shadow px-8 py-4 flex justify-between items-center">
+
+                    {/* PAGE TITLE */}
+                    <div>
+
+                        <h1 className="text-2xl font-bold capitalize">
+                            {pageName}
+                        </h1>
+
+                        <p className="text-gray-500 text-sm">
+                            Pharmacy Inventory Management System
+                        </p>
+
+                    </div>
+
+                    {/* USER INFO */}
+                    <div className="flex items-center gap-4">
+
+                        <div className="text-right">
+
+                            <p className="font-semibold">
+                                Admin User
+                            </p>
+
+                            <p className="text-sm text-gray-500">
+                                Administrator
+                            </p>
+
+                        </div>
+
+                        {/* PROFILE ICON */}
+                        <div className="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center font-bold">
+
+                            A
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {/* PAGE CONTENT */}
+                <div className="p-8 overflow-y-auto flex-1">
+
+                    <Outlet />
+
+                </div>
 
             </div>
 

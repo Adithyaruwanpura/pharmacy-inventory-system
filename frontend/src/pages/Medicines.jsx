@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 
 import MedicineForm from '../components/MedicineForm';
@@ -40,9 +40,7 @@ function Medicines() {
 
         <div>
 
-            <h1 className="text-3xl font-bold mb-8">
-                Medicines
-            </h1>
+
 
             <div className="bg-white p-6 rounded shadow mb-8">
 

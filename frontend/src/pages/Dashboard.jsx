@@ -50,9 +50,7 @@ function Dashboard() {
             {/* MAIN CONTENT */}
             <div className="flex-1 p-8 overflow-y-auto">
 
-                <h1 className="text-3xl font-bold mb-8">
-                    Dashboard
-                </h1>
+
 
                 <DashboardStats />
 
