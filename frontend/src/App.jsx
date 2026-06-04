@@ -12,6 +12,7 @@ import Suppliers from './pages/Suppliers';
 import Purchases from './pages/Purchases';
 import Sales from './pages/Sales';
 import Alerts from './pages/Alerts';
+import SalesReports from './pages/SalesReports';
 
 import MainLayout from './layouts/MainLayout';
 
@@ -57,6 +58,10 @@ function App() {
           <Route
             path="/alerts"
             element={<Alerts />}
+          />
+          <Route
+            path="/reports"
+            element={<SalesReports />}
           />
 
         </Route>

@@ -129,6 +129,21 @@ function MainLayout() {
                             </NavLink>
 
                         </li>
+                        <li>
+
+                            <NavLink
+                                to="/reports"
+                                className={({ isActive }) =>
+                                    `block p-3 rounded transition ${isActive
+                                        ? 'bg-white text-blue-900 font-bold'
+                                        : 'hover:bg-blue-700'
+                                    }`
+                                }
+                            >
+                                Reports
+                            </NavLink>
+
+                        </li>
 
                     </ul>
 
