@@ -8,10 +8,12 @@ import PurchaseSection from '../components/PurchaseSection';
 import SalesSection from '../components/SalesSection';
 import InventoryAlerts from '../components/InventoryAlerts';
 import DashboardStats from '../components/DashboardStats';
+import AnalyticsCharts from '../components/AnalyticsCharts';
 
 function Dashboard() {
 
     const [medicines, setMedicines] = useState([]);
+    const [sales, setSales] = useState([]);
 
     // FETCH MEDICINES
     const fetchMedicines = async () => {
@@ -38,8 +40,33 @@ function Dashboard() {
         }
     };
 
+    const fetchSales = async () => {
+
+        try {
+
+            const token = localStorage.getItem('token');
+
+            const response = await axios.get(
+                'http://localhost:5000/api/sales',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setSales(response.data.data);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+    };
+
     useEffect(() => {
         fetchMedicines();
+        fetchSales();
     }, []);
 
     return (
@@ -90,6 +117,14 @@ function Dashboard() {
                             Active
                         </p>
                     </div>
+
+                </div>
+                <div className="mb-8">
+
+                    <AnalyticsCharts
+                        medicines={medicines}
+                        sales={sales}
+                    />
 
                 </div>
 
