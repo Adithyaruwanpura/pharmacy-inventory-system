@@ -1,33 +1,9 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function MedicineList() {
-
-    const [medicines, setMedicines] = useState([]);
-
-    const fetchMedicines = async () => {
-
-        try {
-
-            const token = localStorage.getItem('token');
-
-            const response = await axios.get(
-                'http://localhost:5000/api/medicines',
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            setMedicines(response.data.data);
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-    };
+function MedicineList({
+    medicines,
+    fetchMedicines
+}) {
 
     // DELETE MEDICINE
     const deleteMedicine = async (id) => {
@@ -56,56 +32,99 @@ function MedicineList() {
         }
     };
 
-    useEffect(() => {
-        fetchMedicines();
-    }, []);
-
     return (
 
         <div>
 
-            <h2>Medicine List</h2>
+            <h2 className="text-2xl font-bold mb-4">
+                Medicine List
+            </h2>
 
-            <table border="1" cellPadding="10">
+            <table className="w-full border">
 
-                <thead>
+                <thead className="bg-gray-200">
 
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Actions</th>
+
+                        <th className="p-3 border">
+                            ID
+                        </th>
+
+                        <th className="p-3 border">
+                            Name
+                        </th>
+
+                        <th className="p-3 border">
+                            Category
+                        </th>
+
+                        <th className="p-3 border">
+                            Quantity
+                        </th>
+
+                        <th className="p-3 border">
+                            Actions
+                        </th>
+
                     </tr>
 
                 </thead>
 
                 <tbody>
 
-                    {medicines.map((medicine) => (
+                    {medicines.length > 0 ? (
 
-                        <tr key={medicine.id}>
+                        medicines.map((medicine) => (
 
-                            <td>{medicine.id}</td>
-                            <td>{medicine.name}</td>
-                            <td>{medicine.category}</td>
-                            <td>{medicine.quantity}</td>
+                            <tr key={medicine.id}>
 
-                            <td>
+                                <td className="border p-3">
+                                    {medicine.id}
+                                </td>
 
-                                <button
-                                    onClick={() =>
-                                        deleteMedicine(medicine.id)
-                                    }
-                                >
-                                    Delete
-                                </button>
+                                <td className="border p-3">
+                                    {medicine.name}
+                                </td>
 
+                                <td className="border p-3">
+                                    {medicine.category}
+                                </td>
+
+                                <td className="border p-3">
+                                    {medicine.quantity}
+                                </td>
+
+                                <td className="border p-3">
+
+                                    <button
+                                        onClick={() =>
+                                            deleteMedicine(medicine.id)
+                                        }
+                                        className="bg-red-500 text-white px-3 py-1 rounded"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        ))
+
+                    ) : (
+
+                        <tr>
+
+                            <td
+                                colSpan="5"
+                                className="text-center p-5"
+                            >
+                                No medicines found
                             </td>
 
                         </tr>
 
-                    ))}
+                    )}
 
                 </tbody>
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import MedicineForm from '../components/MedicineForm';
@@ -7,7 +7,9 @@ import MedicineList from '../components/MedicineList';
 function Medicines() {
 
     const [medicines, setMedicines] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
+    // FETCH MEDICINES
     const fetchMedicines = async () => {
 
         try {
@@ -36,12 +38,43 @@ function Medicines() {
         fetchMedicines();
     }, []);
 
+    // FILTER MEDICINES
+    const filteredMedicines = medicines.filter(
+        (medicine) =>
+
+            medicine.name
+                ?.toLowerCase()
+                .includes(searchTerm.toLowerCase())
+
+            ||
+
+            medicine.category
+                ?.toLowerCase()
+                .includes(searchTerm.toLowerCase())
+
+            ||
+
+            medicine.batchNumber
+                ?.toLowerCase()
+                .includes(searchTerm.toLowerCase())
+    );
+
     return (
 
         <div>
 
+            {/* SEARCH INPUT */}
+            <input
+                type="text"
+                placeholder="Search medicines..."
+                value={searchTerm}
+                onChange={(e) =>
+                    setSearchTerm(e.target.value)
+                }
+                className="border p-3 rounded w-full mb-6"
+            />
 
-
+            {/* FORM */}
             <div className="bg-white p-6 rounded shadow mb-8">
 
                 <MedicineForm
@@ -50,10 +83,11 @@ function Medicines() {
 
             </div>
 
+            {/* LIST */}
             <div className="bg-white p-6 rounded shadow">
 
                 <MedicineList
-                    medicines={medicines}
+                    medicines={filteredMedicines}
                     fetchMedicines={fetchMedicines}
                 />
 

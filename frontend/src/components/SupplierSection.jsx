@@ -5,12 +5,16 @@ function SupplierSection() {
 
     const [suppliers, setSuppliers] = useState([]);
 
+    // SEARCH STATE
+    const [searchTerm, setSearchTerm] = useState('');
+
     const [formData, setFormData] = useState({
         name: '',
         contact: '',
         address: ''
     });
 
+    // FETCH SUPPLIERS
     const fetchSuppliers = async () => {
 
         try {
@@ -32,6 +36,7 @@ function SupplierSection() {
         fetchSuppliers();
     }, []);
 
+    // HANDLE INPUT CHANGE
     const handleChange = (e) => {
 
         setFormData({
@@ -40,6 +45,7 @@ function SupplierSection() {
         });
     };
 
+    // ADD SUPPLIER
     const handleSubmit = async (e) => {
 
         e.preventDefault();
@@ -53,6 +59,13 @@ function SupplierSection() {
 
             alert('Supplier added');
 
+            // CLEAR FORM
+            setFormData({
+                name: '',
+                contact: '',
+                address: ''
+            });
+
             fetchSuppliers();
 
         } catch (error) {
@@ -62,6 +75,14 @@ function SupplierSection() {
         }
     };
 
+    // FILTER SUPPLIERS
+    const filteredSuppliers = suppliers.filter(
+        (supplier) =>
+            supplier.name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+    );
+
     return (
 
         <div>
@@ -70,6 +91,18 @@ function SupplierSection() {
                 Supplier Management
             </h2>
 
+            {/* SEARCH INPUT */}
+            <input
+                type="text"
+                placeholder="Search suppliers..."
+                value={searchTerm}
+                onChange={(e) =>
+                    setSearchTerm(e.target.value)
+                }
+                className="border p-3 rounded w-full mb-6"
+            />
+
+            {/* FORM */}
             <form
                 onSubmit={handleSubmit}
                 className="space-y-4 mb-6"
@@ -79,7 +112,8 @@ function SupplierSection() {
                     type="text"
                     name="name"
                     placeholder="Supplier Name"
-                    className="border p-2 w-full"
+                    value={formData.name}
+                    className="border p-2 w-full rounded"
                     onChange={handleChange}
                 />
 
@@ -87,7 +121,8 @@ function SupplierSection() {
                     type="text"
                     name="contact"
                     placeholder="Contact"
-                    className="border p-2 w-full"
+                    value={formData.contact}
+                    className="border p-2 w-full rounded"
                     onChange={handleChange}
                 />
 
@@ -95,52 +130,81 @@ function SupplierSection() {
                     type="text"
                     name="address"
                     placeholder="Address"
-                    className="border p-2 w-full"
+                    value={formData.address}
+                    className="border p-2 w-full rounded"
                     onChange={handleChange}
                 />
 
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded"
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 >
                     Add Supplier
                 </button>
 
             </form>
 
+            {/* TABLE */}
             <table className="w-full border">
 
                 <thead className="bg-gray-200">
 
                     <tr>
-                        <th className="p-2">Name</th>
-                        <th className="p-2">Contact</th>
-                        <th className="p-2">Address</th>
+
+                        <th className="p-3 border">
+                            Name
+                        </th>
+
+                        <th className="p-3 border">
+                            Contact
+                        </th>
+
+                        <th className="p-3 border">
+                            Address
+                        </th>
+
                     </tr>
 
                 </thead>
 
                 <tbody>
 
-                    {suppliers.map((supplier) => (
+                    {filteredSuppliers.length > 0 ? (
 
-                        <tr key={supplier.id}>
+                        filteredSuppliers.map((supplier) => (
 
-                            <td className="border p-2">
-                                {supplier.name}
-                            </td>
+                            <tr key={supplier.id}>
 
-                            <td className="border p-2">
-                                {supplier.contact}
-                            </td>
+                                <td className="border p-3">
+                                    {supplier.name}
+                                </td>
 
-                            <td className="border p-2">
-                                {supplier.address}
+                                <td className="border p-3">
+                                    {supplier.contact}
+                                </td>
+
+                                <td className="border p-3">
+                                    {supplier.address}
+                                </td>
+
+                            </tr>
+
+                        ))
+
+                    ) : (
+
+                        <tr>
+
+                            <td
+                                colSpan="3"
+                                className="text-center p-5"
+                            >
+                                No suppliers found
                             </td>
 
                         </tr>
 
-                    ))}
+                    )}
 
                 </tbody>
 
