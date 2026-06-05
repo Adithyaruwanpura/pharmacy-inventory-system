@@ -2,7 +2,8 @@ import axios from 'axios';
 
 function MedicineList({
     medicines,
-    fetchMedicines
+    fetchMedicines,
+    setSelectedMedicine
 }) {
 
     // DELETE MEDICINE
@@ -94,7 +95,17 @@ function MedicineList({
                                     {medicine.quantity}
                                 </td>
 
-                                <td className="border p-3">
+
+                                <td className="border p-3 space-x-2">
+
+                                    <button
+                                        onClick={() =>
+                                            setSelectedMedicine(medicine)
+                                        }
+                                        className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                    >
+                                        Edit
+                                    </button>
 
                                     <button
                                         onClick={() =>

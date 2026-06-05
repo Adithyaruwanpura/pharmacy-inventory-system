@@ -7,7 +7,11 @@ import MedicineList from '../components/MedicineList';
 function Medicines() {
 
     const [medicines, setMedicines] = useState([]);
+
     const [searchTerm, setSearchTerm] = useState('');
+
+    // EDIT STATE
+    const [selectedMedicine, setSelectedMedicine] = useState(null);
 
     // FETCH MEDICINES
     const fetchMedicines = async () => {
@@ -38,7 +42,7 @@ function Medicines() {
         fetchMedicines();
     }, []);
 
-    // FILTER MEDICINES
+    // FILTER
     const filteredMedicines = medicines.filter(
         (medicine) =>
 
@@ -63,7 +67,7 @@ function Medicines() {
 
         <div>
 
-            {/* SEARCH INPUT */}
+            {/* SEARCH */}
             <input
                 type="text"
                 placeholder="Search medicines..."
@@ -79,6 +83,8 @@ function Medicines() {
 
                 <MedicineForm
                     fetchMedicines={fetchMedicines}
+                    selectedMedicine={selectedMedicine}
+                    setSelectedMedicine={setSelectedMedicine}
                 />
 
             </div>
@@ -89,6 +95,7 @@ function Medicines() {
                 <MedicineList
                     medicines={filteredMedicines}
                     fetchMedicines={fetchMedicines}
+                    setSelectedMedicine={setSelectedMedicine}
                 />
 
             </div>

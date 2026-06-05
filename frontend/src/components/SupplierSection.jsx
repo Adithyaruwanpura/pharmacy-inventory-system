@@ -5,8 +5,11 @@ function SupplierSection() {
 
     const [suppliers, setSuppliers] = useState([]);
 
-    // SEARCH STATE
+    // SEARCH
     const [searchTerm, setSearchTerm] = useState('');
+
+    // EDIT STATE
+    const [selectedSupplier, setSelectedSupplier] = useState(null);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -36,7 +39,22 @@ function SupplierSection() {
         fetchSuppliers();
     }, []);
 
-    // HANDLE INPUT CHANGE
+    // LOAD SELECTED SUPPLIER
+    useEffect(() => {
+
+        if (selectedSupplier) {
+
+            setFormData({
+                name: selectedSupplier.name || '',
+                contact: selectedSupplier.contact || '',
+                address: selectedSupplier.address || ''
+            });
+
+        }
+
+    }, [selectedSupplier]);
+
+    // HANDLE INPUT
     const handleChange = (e) => {
 
         setFormData({
@@ -45,26 +63,45 @@ function SupplierSection() {
         });
     };
 
-    // ADD SUPPLIER
+    // SUBMIT
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
         try {
 
-            await axios.post(
-                'http://localhost:5000/api/suppliers',
-                formData
-            );
+            // UPDATE
+            if (selectedSupplier) {
 
-            alert('Supplier added');
+                await axios.put(
+                    `http://localhost:5000/api/suppliers/${selectedSupplier.id}`,
+                    formData
+                );
 
-            // CLEAR FORM
+                alert('Supplier updated successfully');
+
+            }
+
+            // CREATE
+            else {
+
+                await axios.post(
+                    'http://localhost:5000/api/suppliers',
+                    formData
+                );
+
+                alert('Supplier added successfully');
+
+            }
+
+            // RESET
             setFormData({
                 name: '',
                 contact: '',
                 address: ''
             });
+
+            setSelectedSupplier(null);
 
             fetchSuppliers();
 
@@ -72,15 +109,51 @@ function SupplierSection() {
 
             console.error(error);
 
+            alert('Error saving supplier');
+
+        }
+    };
+
+    // DELETE SUPPLIER
+    const deleteSupplier = async (id) => {
+
+        const confirmDelete = window.confirm(
+            'Are you sure you want to delete this supplier?'
+        );
+
+        if (!confirmDelete) return;
+
+        try {
+
+            await axios.delete(
+                `http://localhost:5000/api/suppliers/${id}`
+            );
+
+            alert('Supplier deleted successfully');
+
+            fetchSuppliers();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert('Error deleting supplier');
+
         }
     };
 
     // FILTER SUPPLIERS
     const filteredSuppliers = suppliers.filter(
         (supplier) =>
+
             supplier.name
                 .toLowerCase()
                 .includes(searchTerm.toLowerCase())
+
+            ||
+
+            supplier.contact
+                .includes(searchTerm)
     );
 
     return (
@@ -88,10 +161,12 @@ function SupplierSection() {
         <div>
 
             <h2 className="text-2xl font-bold mb-4">
+
                 Supplier Management
+
             </h2>
 
-            {/* SEARCH INPUT */}
+            {/* SEARCH */}
             <input
                 type="text"
                 placeholder="Search suppliers..."
@@ -105,7 +180,7 @@ function SupplierSection() {
             {/* FORM */}
             <form
                 onSubmit={handleSubmit}
-                className="space-y-4 mb-6"
+                className="space-y-4 mb-8"
             >
 
                 <input
@@ -113,8 +188,8 @@ function SupplierSection() {
                     name="name"
                     placeholder="Supplier Name"
                     value={formData.name}
-                    className="border p-2 w-full rounded"
                     onChange={handleChange}
+                    className="border p-3 w-full rounded"
                 />
 
                 <input
@@ -122,8 +197,8 @@ function SupplierSection() {
                     name="contact"
                     placeholder="Contact"
                     value={formData.contact}
-                    className="border p-2 w-full rounded"
                     onChange={handleChange}
+                    className="border p-3 w-full rounded"
                 />
 
                 <input
@@ -131,16 +206,47 @@ function SupplierSection() {
                     name="address"
                     placeholder="Address"
                     value={formData.address}
-                    className="border p-2 w-full rounded"
                     onChange={handleChange}
+                    className="border p-3 w-full rounded"
                 />
 
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                    Add Supplier
-                </button>
+                <div className="space-x-3">
+
+                    <button
+                        type="submit"
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    >
+
+                        {selectedSupplier
+                            ? 'Update Supplier'
+                            : 'Add Supplier'}
+
+                    </button>
+
+                    {/* CANCEL BUTTON */}
+                    {selectedSupplier && (
+
+                        <button
+                            type="button"
+                            onClick={() => {
+
+                                setSelectedSupplier(null);
+
+                                setFormData({
+                                    name: '',
+                                    contact: '',
+                                    address: ''
+                                });
+
+                            }}
+                            className="bg-gray-500 text-white px-4 py-2 rounded"
+                        >
+                            Cancel
+                        </button>
+
+                    )}
+
+                </div>
 
             </form>
 
@@ -161,6 +267,10 @@ function SupplierSection() {
 
                         <th className="p-3 border">
                             Address
+                        </th>
+
+                        <th className="p-3 border">
+                            Actions
                         </th>
 
                     </tr>
@@ -187,6 +297,28 @@ function SupplierSection() {
                                     {supplier.address}
                                 </td>
 
+                                <td className="border p-3 space-x-2">
+
+                                    <button
+                                        onClick={() =>
+                                            setSelectedSupplier(supplier)
+                                        }
+                                        className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        onClick={() =>
+                                            deleteSupplier(supplier.id)
+                                        }
+                                        className="bg-red-500 text-white px-3 py-1 rounded"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </td>
+
                             </tr>
 
                         ))
@@ -196,7 +328,7 @@ function SupplierSection() {
                         <tr>
 
                             <td
-                                colSpan="3"
+                                colSpan="4"
                                 className="text-center p-5"
                             >
                                 No suppliers found

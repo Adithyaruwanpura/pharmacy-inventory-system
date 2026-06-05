@@ -5,7 +5,7 @@ const {
     addMedicine,
     getMedicines,
     updateMedicine,
-    deleteMedicine
+    deleteMedicine,
 } = require('../controllers/medicineController');
 const authMiddleware = require('../middleware/authMiddleware');
 
