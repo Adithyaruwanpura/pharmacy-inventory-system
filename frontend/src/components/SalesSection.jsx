@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function SalesSection() {
 
@@ -86,7 +87,7 @@ function SalesSection() {
                 formData
             );
 
-            alert('Sale recorded successfully');
+            toast.success('Sale recorded successfully');
 
             // RESET FORM
             setFormData({
@@ -100,8 +101,8 @@ function SalesSection() {
         } catch (error) {
 
             console.error(error);
+            toast.error('Error recording sale');
 
-            alert('Error recording sale');
 
         }
     };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function SupplierSection() {
 
@@ -78,7 +79,7 @@ function SupplierSection() {
                     formData
                 );
 
-                alert('Supplier updated successfully');
+                toast.success('Supplier updated successfully');
 
             }
 
@@ -90,7 +91,7 @@ function SupplierSection() {
                     formData
                 );
 
-                alert('Supplier added successfully');
+                toast.success('Supplier added successfully');
 
             }
 
@@ -109,7 +110,7 @@ function SupplierSection() {
 
             console.error(error);
 
-            alert('Error saving supplier');
+            toast.error('Error saving supplier');
 
         }
     };
@@ -129,7 +130,7 @@ function SupplierSection() {
                 `http://localhost:5000/api/suppliers/${id}`
             );
 
-            alert('Supplier deleted successfully');
+            toast.success('Supplier deleted successfully');
 
             fetchSuppliers();
 
@@ -137,7 +138,7 @@ function SupplierSection() {
 
             console.error(error);
 
-            alert('Error deleting supplier');
+            toast.error('Error deleting supplier');
 
         }
     };

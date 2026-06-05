@@ -13,6 +13,7 @@ import Purchases from './pages/Purchases';
 import Sales from './pages/Sales';
 import Alerts from './pages/Alerts';
 import SalesReports from './pages/SalesReports';
+import { ToastContainer } from 'react-toastify';
 
 import MainLayout from './layouts/MainLayout';
 
@@ -68,7 +69,18 @@ function App() {
 
       </Routes>
 
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        pauseOnHover
+        theme="colored" />
+
     </BrowserRouter>
+
+
   );
 }
 

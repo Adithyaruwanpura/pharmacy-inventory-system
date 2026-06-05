@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function MedicineList({
     medicines,
@@ -8,6 +9,11 @@ function MedicineList({
 
     // DELETE MEDICINE
     const deleteMedicine = async (id) => {
+        const confirmDelete = window.confirm(
+            'Are you sure you want to delete this medicine?'
+        );
+
+        if (!confirmDelete) return;
 
         try {
 
@@ -22,13 +28,14 @@ function MedicineList({
                 }
             );
 
-            alert('Medicine deleted');
+            toast.success('Medicine deleted');
 
             fetchMedicines();
 
         } catch (error) {
 
             console.error(error);
+            toast.error('Error deleting medicine');
 
         }
     };

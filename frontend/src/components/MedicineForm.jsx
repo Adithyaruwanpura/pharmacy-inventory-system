@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function MedicineForm({
     fetchMedicines,
@@ -67,7 +68,7 @@ function MedicineForm({
                     }
                 );
 
-                alert('Medicine updated successfully');
+                toast.success('Medicine updated successfully');
 
             }
 
@@ -84,7 +85,7 @@ function MedicineForm({
                     }
                 );
 
-                alert('Medicine added successfully');
+                toast.success('Medicine added successfully');
 
             }
 
@@ -107,7 +108,7 @@ function MedicineForm({
 
             console.error(error);
 
-            alert('Error saving medicine');
+            toast.error('Error saving medicine');
 
         }
     };

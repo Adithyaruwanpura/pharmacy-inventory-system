@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function PurchaseSection() {
 
@@ -69,13 +70,13 @@ function PurchaseSection() {
                 formData
             );
 
-            alert('Purchase added successfully');
+            toast.success('Purchase added successfully');
 
         } catch (error) {
 
             console.error(error);
 
-            alert('Error adding purchase');
+            toast.error('Error adding purchase');
 
         }
     };
