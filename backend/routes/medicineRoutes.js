@@ -9,10 +9,34 @@ const {
 } = require('../controllers/medicineController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/', authMiddleware, addMedicine);
+const roleMiddleware =
+    require('../middleware/roleMiddleware');
+
+//router.post('/', authMiddleware, addMedicine);
 router.get('/', authMiddleware, getMedicines);
-router.put('/:id', authMiddleware, updateMedicine);
-router.delete('/:id', authMiddleware, deleteMedicine);
+//router.put('/:id', authMiddleware, updateMedicine);
+//router.delete('/:id', authMiddleware, deleteMedicine);
+
+router.post(
+    '/',
+    authMiddleware,
+    roleMiddleware('admin'),
+    addMedicine
+);
+
+router.put(
+    '/:id',
+    authMiddleware,
+    roleMiddleware('admin'),
+    updateMedicine
+);
+
+router.delete(
+    '/:id',
+    authMiddleware,
+    roleMiddleware('admin'),
+    deleteMedicine
+);
 
 
 module.exports = router;

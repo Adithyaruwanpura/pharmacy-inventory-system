@@ -3,6 +3,7 @@ import {
   Routes,
   Route
 } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import Login from './pages/Login';
 
@@ -31,38 +32,69 @@ function App() {
         {/* DASHBOARD LAYOUT */}
         <Route element={<MainLayout />}>
 
+
           <Route
             path="/dashboard"
-            element={<Dashboard />}
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
           />
 
           <Route
             path="/medicines"
-            element={<Medicines />}
+            element={
+              <ProtectedRoute>
+                <Medicines />
+              </ProtectedRoute>
+            }
           />
+
 
           <Route
             path="/suppliers"
-            element={<Suppliers />}
+            element={
+              <ProtectedRoute>
+                <Suppliers />
+              </ProtectedRoute>
+            }
           />
 
           <Route
             path="/purchases"
-            element={<Purchases />}
+            element={
+              <ProtectedRoute>
+                <Purchases />
+              </ProtectedRoute>
+            }
           />
+
 
           <Route
             path="/sales"
-            element={<Sales />}
+            element={
+              <ProtectedRoute>
+                <Sales />
+              </ProtectedRoute>
+            }
           />
 
           <Route
             path="/alerts"
-            element={<Alerts />}
+            element={
+              <ProtectedRoute>
+                <Alerts />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/reports"
-            element={<SalesReports />}
+            element={
+              <ProtectedRoute>
+                <SalesReports />
+              </ProtectedRoute>
+            }
           />
 
         </Route>

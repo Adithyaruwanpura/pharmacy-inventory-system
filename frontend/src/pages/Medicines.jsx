@@ -63,6 +63,9 @@ function Medicines() {
                 .includes(searchTerm.toLowerCase())
     );
 
+    const user =
+        JSON.parse(localStorage.getItem('user'));
+
     return (
 
         <div>
@@ -79,15 +82,17 @@ function Medicines() {
             />
 
             {/* FORM */}
-            <div className="bg-white p-6 rounded shadow mb-8">
+            {user?.role === 'admin' && (
+                <div className="bg-white p-6 rounded shadow mb-8">
 
-                <MedicineForm
-                    fetchMedicines={fetchMedicines}
-                    selectedMedicine={selectedMedicine}
-                    setSelectedMedicine={setSelectedMedicine}
-                />
+                    <MedicineForm
+                        fetchMedicines={fetchMedicines}
+                        selectedMedicine={selectedMedicine}
+                        setSelectedMedicine={setSelectedMedicine}
+                    />
 
-            </div>
+                </div>
+            )}
 
             {/* LIST */}
             <div className="bg-white p-6 rounded shadow">

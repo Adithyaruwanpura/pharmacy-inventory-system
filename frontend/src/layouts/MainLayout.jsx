@@ -12,6 +12,9 @@ function MainLayout() {
     const pageName =
         location.pathname.replace('/', '') || 'dashboard';
 
+    const user =
+        JSON.parse(localStorage.getItem('user'));
+
     return (
 
         <div className="flex min-h-screen bg-gray-100">
@@ -63,38 +66,42 @@ function MainLayout() {
                         </li>
 
                         {/* SUPPLIERS */}
-                        <li>
+                        {user?.role === 'admin' && (
+                            <li>
 
-                            <NavLink
-                                to="/suppliers"
-                                className={({ isActive }) =>
-                                    `block p-3 rounded transition ${isActive
-                                        ? 'bg-white text-blue-900 font-bold'
-                                        : 'hover:bg-blue-700'
-                                    }`
-                                }
-                            >
-                                Suppliers
-                            </NavLink>
+                                <NavLink
+                                    to="/suppliers"
+                                    className={({ isActive }) =>
+                                        `block p-3 rounded transition ${isActive
+                                            ? 'bg-white text-blue-900 font-bold'
+                                            : 'hover:bg-blue-700'
+                                        }`
+                                    }
+                                >
+                                    Suppliers
+                                </NavLink>
 
-                        </li>
+                            </li>
+                        )}
 
                         {/* PURCHASES */}
-                        <li>
+                        {user?.role === 'admin' && (
+                            <li>
 
-                            <NavLink
-                                to="/purchases"
-                                className={({ isActive }) =>
-                                    `block p-3 rounded transition ${isActive
-                                        ? 'bg-white text-blue-900 font-bold'
-                                        : 'hover:bg-blue-700'
-                                    }`
-                                }
-                            >
-                                Purchases
-                            </NavLink>
+                                <NavLink
+                                    to="/purchases"
+                                    className={({ isActive }) =>
+                                        `block p-3 rounded transition ${isActive
+                                            ? 'bg-white text-blue-900 font-bold'
+                                            : 'hover:bg-blue-700'
+                                        }`
+                                    }
+                                >
+                                    Purchases
+                                </NavLink>
 
-                        </li>
+                            </li>
+                        )}
 
                         {/* SALES */}
                         <li>
@@ -129,21 +136,25 @@ function MainLayout() {
                             </NavLink>
 
                         </li>
-                        <li>
+                        {user?.role === 'admin' && (
 
-                            <NavLink
-                                to="/reports"
-                                className={({ isActive }) =>
-                                    `block p-3 rounded transition ${isActive
-                                        ? 'bg-white text-blue-900 font-bold'
-                                        : 'hover:bg-blue-700'
-                                    }`
-                                }
-                            >
-                                Reports
-                            </NavLink>
+                            <li>
 
-                        </li>
+                                <NavLink
+                                    to="/reports"
+                                    className={({ isActive }) =>
+                                        `block p-3 rounded transition ${isActive
+                                            ? 'bg-white text-blue-900 font-bold'
+                                            : 'hover:bg-blue-700'
+                                        }`
+                                    }
+                                >
+                                    Reports
+                                </NavLink>
+
+                            </li>
+
+                        )}
 
                     </ul>
 
@@ -154,7 +165,10 @@ function MainLayout() {
 
                     <button
                         onClick={() => {
+
                             localStorage.removeItem('token');
+                            localStorage.removeItem('user');
+
                             window.location.href = '/';
                         }}
                         className="bg-red-500 hover:bg-red-600 transition px-4 py-3 rounded w-full"
@@ -191,11 +205,11 @@ function MainLayout() {
                         <div className="text-right">
 
                             <p className="font-semibold">
-                                Admin User
+                                {user?.username}
                             </p>
 
-                            <p className="text-sm text-gray-500">
-                                Administrator
+                            <p className="text-sm text-gray-500 capitalize">
+                                {user?.role}
                             </p>
 
                         </div>

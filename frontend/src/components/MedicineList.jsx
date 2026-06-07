@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 function MedicineList({
@@ -40,6 +41,13 @@ function MedicineList({
         }
     };
 
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const itemsPerPage = 5;
+
+    const user =
+        JSON.parse(localStorage.getItem('user'));
+
     return (
 
         <div>
@@ -69,10 +77,10 @@ function MedicineList({
                         <th className="p-3 border">
                             Quantity
                         </th>
-
-                        <th className="p-3 border">
-                            Actions
-                        </th>
+                        {user?.role === 'admin' && (
+                            <th className="p-3 border">
+                                Actions
+                            </th>)}
 
                     </tr>
 
@@ -102,28 +110,29 @@ function MedicineList({
                                     {medicine.quantity}
                                 </td>
 
+                                {user?.role === 'admin' && (
+                                    <td className="border p-3 space-x-2">
 
-                                <td className="border p-3 space-x-2">
+                                        <button
+                                            onClick={() =>
+                                                setSelectedMedicine(medicine)
+                                            }
+                                            className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                        >
+                                            Edit
+                                        </button>
 
-                                    <button
-                                        onClick={() =>
-                                            setSelectedMedicine(medicine)
-                                        }
-                                        className="bg-yellow-500 text-white px-3 py-1 rounded"
-                                    >
-                                        Edit
-                                    </button>
+                                        <button
+                                            onClick={() =>
+                                                deleteMedicine(medicine.id)
+                                            }
+                                            className="bg-red-500 text-white px-3 py-1 rounded"
+                                        >
+                                            Delete
+                                        </button>
 
-                                    <button
-                                        onClick={() =>
-                                            deleteMedicine(medicine.id)
-                                        }
-                                        className="bg-red-500 text-white px-3 py-1 rounded"
-                                    >
-                                        Delete
-                                    </button>
-
-                                </td>
+                                    </td>
+                                )}
 
                             </tr>
 

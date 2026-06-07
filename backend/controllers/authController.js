@@ -94,7 +94,7 @@ exports.loginUser = async (req, res) => {
                 id: user.id,
                 role: user.role
             },
-            'secretkey',
+            process.env.JWT_SECRET,
             {
                 expiresIn: '1d'
             }
@@ -102,9 +102,13 @@ exports.loginUser = async (req, res) => {
 
         res.json({
             success: true,
-            token
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                role: user.role
+            }
         });
-
     } catch (error) {
 
         console.error(error);
