@@ -1,92 +1,84 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import InvoiceGenerator from '../components/InvoiceGenerator';
+import ReportNav from '../components/reports/ReportNav';
+import DailyProfit from '../components/reports/DailyProfit';
+import MonthlyProfit from '../components/reports/MonthlyProfit';
+import ExpenseReport from '../components/reports/ExpenseReport';
+import PurchaseCostReport from '../components/reports/PurchaseCostReport';
+import SalesSummaryReport from '../components/reports/SalesSummaryReport';
 
 function SalesReports() {
 
-    const [sales, setSales] = useState([]);
+    const [activeTab, setActiveTab] = useState('daily');
 
-    const fetchSales = async () => {
+    const [sales, setSales] = useState([]);
+    const [purchases, setPurchases] = useState([]);
+
+    const token = localStorage.getItem('token');
+
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+
+    const fetchData = async () => {
 
         try {
 
-            const response = await axios.get(
-                'http://localhost:5000/api/sales'
+            const salesRes = await axios.get(
+                'http://localhost:5000/api/sales',
+                config
             );
 
-            setSales(response.data.data);
+            const purchaseRes = await axios.get(
+                'http://localhost:5000/api/purchases',
+                config
+            );
 
-        } catch (error) {
+            setSales(salesRes.data.data);
+            setPurchases(purchaseRes.data.data);
 
-            console.error(error);
-
+        } catch (err) {
+            console.error(err);
         }
     };
 
     useEffect(() => {
-        fetchSales();
+        fetchData();
     }, []);
 
     return (
 
-        <div>
+        <div className="p-6">
 
-            <h1 className="text-3xl font-bold mb-8">
-                Sales Reports
-            </h1>
+            {/* TOP SUB NAV */}
+            <ReportNav
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+            />
 
-            <div className="bg-white p-6 rounded shadow">
+            {/* REPORT CONTENT */}
+            <div className="mt-6">
 
-                <table className="w-full border">
+                {activeTab === 'daily' && (
+                    <DailyProfit sales={sales} purchases={purchases} />
+                )}
 
-                    <thead className="bg-gray-200">
+                {activeTab === 'monthly' && (
+                    <MonthlyProfit sales={sales} purchases={purchases} />
+                )}
 
-                        <tr>
-                            <th className="p-3">ID</th>
-                            <th className="p-3">Medicine</th>
-                            <th className="p-3">Quantity</th>
-                            <th className="p-3">Price</th>
-                            <th className="p-3">Invoice</th>
-                        </tr>
+                {activeTab === 'expenses' && (
+                    <ExpenseReport purchases={purchases} />
+                )}
 
-                    </thead>
+                {activeTab === 'purchase' && (
+                    <PurchaseCostReport purchases={purchases} />
+                )}
 
-                    <tbody>
-
-                        {sales.map((sale) => (
-
-                            <tr key={sale.id}>
-
-                                <td className="border p-3">
-                                    {sale.id}
-                                </td>
-
-                                <td className="border p-3">
-                                    {sale.medicine?.name}
-                                </td>
-
-                                <td className="border p-3">
-                                    {sale.quantity}
-                                </td>
-
-                                <td className="border p-3">
-                                    Rs. {sale.totalPrice}
-                                </td>
-
-                                <td className="border p-3">
-
-                                    <InvoiceGenerator sale={sale} />
-
-                                </td>
-
-                            </tr>
-
-                        ))}
-
-                    </tbody>
-
-                </table>
+                {activeTab === 'sales' && (
+                    <SalesSummaryReport sales={sales} />
+                )}
 
             </div>
 

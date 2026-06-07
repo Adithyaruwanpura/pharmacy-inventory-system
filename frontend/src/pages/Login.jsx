@@ -20,7 +20,20 @@ function Login() {
                 }
             );
 
-            localStorage.setItem('token', response.data.token);
+            localStorage.setItem(
+                'token',
+                response.data.token
+            );
+
+            localStorage.setItem(
+                'role',
+                response.data.user.role
+            );
+
+            localStorage.setItem(
+                'username',
+                response.data.user.username
+            );
 
             localStorage.setItem(
                 'user',
