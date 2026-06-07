@@ -9,7 +9,8 @@ import SalesSection from '../components/SalesSection';
 import InventoryAlerts from '../components/InventoryAlerts';
 import DashboardStats from '../components/DashboardStats';
 import AnalyticsCharts from '../components/AnalyticsCharts';
-
+import RecentSales from '../components/RecentSales';
+import LowStockCard from '../components/LowStockCard';
 function Dashboard() {
 
     const [medicines, setMedicines] = useState([]);
@@ -125,6 +126,13 @@ function Dashboard() {
                         medicines={medicines}
                         sales={sales}
                     />
+
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                    <RecentSales sales={sales} />
+
+                    <LowStockCard medicines={medicines} />
 
                 </div>
 

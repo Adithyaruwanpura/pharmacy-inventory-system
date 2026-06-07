@@ -7,24 +7,23 @@ function DashboardStats() {
         medicines: 0,
         suppliers: 0,
         sales: 0,
-        lowStock: 0
+        lowStock: 0,
+        todayRevenue: 0,
+        monthlyRevenue: 0
     });
 
     const fetchStats = async () => {
 
         try {
 
-            // GET TOKEN
             const token = localStorage.getItem('token');
 
-            // COMMON HEADERS
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             };
 
-            // API CALLS
             const medicineRes = await axios.get(
                 'http://localhost:5000/api/medicines',
                 config
@@ -45,17 +44,46 @@ function DashboardStats() {
                 config
             );
 
-            // SET STATS
+            const sales = salesRes.data.data;
+
+            // TODAY DATE
+            const today = new Date().toDateString();
+
+            // CURRENT MONTH
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            // TODAY REVENUE
+            const todayRevenue = sales
+                .filter(sale =>
+                    new Date(sale.saleDate).toDateString() === today
+                )
+                .reduce((total, sale) => total + sale.totalPrice, 0);
+
+            // MONTHLY REVENUE
+            const monthlyRevenue = sales
+                .filter(sale => {
+                    const saleDate = new Date(sale.saleDate);
+
+                    return (
+                        saleDate.getMonth() === currentMonth &&
+                        saleDate.getFullYear() === currentYear
+                    );
+                })
+                .reduce((total, sale) => total + sale.totalPrice, 0);
+
             setStats({
                 medicines: medicineRes.data.data.length,
                 suppliers: supplierRes.data.data.length,
-                sales: salesRes.data.data.length,
-                lowStock: lowStockRes.data.data.length
+                sales: sales.length,
+                lowStock: lowStockRes.data.data.length,
+                todayRevenue,
+                monthlyRevenue
             });
 
         } catch (error) {
 
-            console.error('Dashboard Stats Error:', error);
+            console.error(error);
 
         }
     };
@@ -66,56 +94,82 @@ function DashboardStats() {
 
     return (
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-5 mb-8">
 
             {/* MEDICINES */}
-            <div className="bg-blue-500 text-white p-6 rounded shadow">
+            <div className="bg-linear-to-r from-blue-500 to-blue-700 text-white p-5 rounded-2xl shadow-lg">
 
-                <h3 className="text-xl font-bold">
-                    Medicines
+                <h3 className="text-sm opacity-80">
+                    Total Medicines
                 </h3>
 
-                <p className="text-3xl mt-2">
+                <p className="text-3xl font-bold mt-2">
                     {stats.medicines}
                 </p>
 
             </div>
 
             {/* SUPPLIERS */}
-            <div className="bg-green-500 text-white p-6 rounded shadow">
+            <div className="bg-linear-to-r from-green-500 to-green-700 text-white p-5 rounded-2xl shadow-lg">
 
-                <h3 className="text-xl font-bold">
+                <h3 className="text-sm opacity-80">
                     Suppliers
                 </h3>
 
-                <p className="text-3xl mt-2">
+                <p className="text-3xl font-bold mt-2">
                     {stats.suppliers}
                 </p>
 
             </div>
 
             {/* SALES */}
-            <div className="bg-red-500 text-white p-6 rounded shadow">
+            <div className="bg-linear-to-r from-red-500 to-red-700 text-white p-5 rounded-2xl shadow-lg">
 
-                <h3 className="text-xl font-bold">
-                    Sales
+                <h3 className="text-sm opacity-80">
+                    Total Sales
                 </h3>
 
-                <p className="text-3xl mt-2">
+                <p className="text-3xl font-bold mt-2">
                     {stats.sales}
                 </p>
 
             </div>
 
             {/* LOW STOCK */}
-            <div className="bg-yellow-500 text-white p-6 rounded shadow">
+            <div className="bg-linear-to-r from-yellow-400 to-yellow-600 text-white p-5 rounded-2xl shadow-lg">
 
-                <h3 className="text-xl font-bold">
+                <h3 className="text-sm opacity-80">
                     Low Stock
                 </h3>
 
-                <p className="text-3xl mt-2">
+                <p className="text-3xl font-bold mt-2">
                     {stats.lowStock}
+                </p>
+
+            </div>
+
+            {/* TODAY REVENUE */}
+            <div className="bg-linear-to-r from-purple-500 to-purple-700 text-white p-5 rounded-2xl shadow-lg">
+
+                <h3 className="text-sm opacity-80">
+                    Today Revenue
+                </h3>
+
+                <p className="text-2xl font-bold mt-2">
+                    Rs. {stats.todayRevenue}
+                </p>
+
+            </div>
+
+            {/* MONTHLY REVENUE */}
+            <div className="bg-linear-to-r from-pink-500 to-pink-700 text-white p-5 rounded-2xl shadow-lg">
+
+                <h3 className="text-sm opacity-80">
+                    Monthly Revenue
+                </h3>
+
+                <p className="text-2xl font-bold mt-2">
+                    Rs. {stats.monthlyRevenue}
                 </p>
 
             </div>
