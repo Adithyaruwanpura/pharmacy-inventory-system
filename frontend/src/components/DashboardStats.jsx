@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
 function DashboardStats() {
 
     const [stats, setStats] = useState({
@@ -15,22 +14,38 @@ function DashboardStats() {
 
         try {
 
+            // GET TOKEN
+            const token = localStorage.getItem('token');
+
+            // COMMON HEADERS
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+
+            // API CALLS
             const medicineRes = await axios.get(
-                'http://localhost:5000/api/medicines'
+                'http://localhost:5000/api/medicines',
+                config
             );
 
             const supplierRes = await axios.get(
-                'http://localhost:5000/api/suppliers'
+                'http://localhost:5000/api/suppliers',
+                config
             );
 
             const salesRes = await axios.get(
-                'http://localhost:5000/api/sales'
+                'http://localhost:5000/api/sales',
+                config
             );
 
             const lowStockRes = await axios.get(
-                'http://localhost:5000/api/inventory/low-stock'
+                'http://localhost:5000/api/inventory/low-stock',
+                config
             );
 
+            // SET STATS
             setStats({
                 medicines: medicineRes.data.data.length,
                 suppliers: supplierRes.data.data.length,
@@ -40,7 +55,7 @@ function DashboardStats() {
 
         } catch (error) {
 
-            console.error(error);
+            console.error('Dashboard Stats Error:', error);
 
         }
     };
@@ -53,7 +68,7 @@ function DashboardStats() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
 
-            {/* TOTAL MEDICINES */}
+            {/* MEDICINES */}
             <div className="bg-blue-500 text-white p-6 rounded shadow">
 
                 <h3 className="text-xl font-bold">
@@ -66,7 +81,7 @@ function DashboardStats() {
 
             </div>
 
-            {/* TOTAL SUPPLIERS */}
+            {/* SUPPLIERS */}
             <div className="bg-green-500 text-white p-6 rounded shadow">
 
                 <h3 className="text-xl font-bold">
@@ -79,7 +94,7 @@ function DashboardStats() {
 
             </div>
 
-            {/* TOTAL SALES */}
+            {/* SALES */}
             <div className="bg-red-500 text-white p-6 rounded shadow">
 
                 <h3 className="text-xl font-bold">

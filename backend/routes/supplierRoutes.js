@@ -11,8 +11,9 @@ const {
 } = require('../controllers/supplierController');
 const authMiddleware = require('../middleware/authMiddleware');
 
+
 //router.post('/', authMiddleware, addSupplier);
-//router.get('/', getSuppliers);
+router.get('/', getSuppliers);
 //router.put('/:id', authMiddleware, updateSupplier);
 //router.delete('/:id', authMiddleware, deleteSupplier);
 router.delete(
@@ -33,10 +34,5 @@ router.post(
     roleMiddleware('admin'),
     addSupplier
 );
-router.get(
-    '/:id',
-    authMiddleware,
-    roleMiddleware('admin'),
-    getSuppliers
-);
+
 module.exports = router;
