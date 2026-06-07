@@ -42,9 +42,8 @@ function InvoiceGenerator({ sale }) {
             20,
             70
         );
-
         doc.text(
-            `Date: ${new Date(sale.createdAt)
+            `Date: ${new Date(sale.saleDate)
                 .toLocaleDateString()
             }`,
             20,
