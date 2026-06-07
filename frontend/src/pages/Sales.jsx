@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 import InvoiceGenerator from '../components/InvoiceGenerator';
 
@@ -8,12 +9,18 @@ function SalesSection() {
     const [medicines, setMedicines] = useState([]);
     const [sales, setSales] = useState([]);
 
-    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedMedicine, setSelectedMedicine] =
+        useState(null);
+
+    const [cashReceived, setCashReceived] =
+        useState('');
+
+    const [taxPercent, setTaxPercent] =
+        useState(0);
 
     const [formData, setFormData] = useState({
         medicineId: '',
-        quantity: '',
-        totalPrice: ''
+        quantity: ''
     });
 
     // FETCH MEDICINES
@@ -21,13 +28,15 @@ function SalesSection() {
 
         try {
 
-            const token = localStorage.getItem('token');
+            const token =
+                localStorage.getItem('token');
 
             const response = await axios.get(
                 'http://localhost:5000/api/medicines',
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization:
+                            `Bearer ${token}`
                     }
                 }
             );
@@ -46,13 +55,15 @@ function SalesSection() {
 
         try {
 
-            const token = localStorage.getItem('token');
+            const token =
+                localStorage.getItem('token');
 
             const response = await axios.get(
                 'http://localhost:5000/api/sales',
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization:
+                            `Bearer ${token}`
                     }
                 }
             );
@@ -73,7 +84,7 @@ function SalesSection() {
 
     }, []);
 
-    // INPUT CHANGE
+    // HANDLE INPUT CHANGE
     const handleChange = (e) => {
 
         setFormData({
@@ -82,35 +93,70 @@ function SalesSection() {
         });
     };
 
-    // ADD SALE
+    // AUTO CALCULATIONS
+    const subtotal =
+        selectedMedicine && formData.quantity
+            ? selectedMedicine.sellingPrice *
+            parseInt(formData.quantity)
+            : 0;
+
+    const taxAmount =
+        (subtotal * taxPercent) / 100;
+
+    const finalTotal =
+        subtotal + taxAmount;
+
+    const balance =
+        cashReceived
+            ? cashReceived - finalTotal
+            : 0;
+
+    // SUBMIT SALE
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
         try {
 
-            const token = localStorage.getItem('token');
+            const token =
+                localStorage.getItem('token');
 
             await axios.post(
                 'http://localhost:5000/api/sales',
-                formData,
+                {
+                    medicineId:
+                        formData.medicineId,
+
+                    quantity:
+                        formData.quantity,
+
+                    totalPrice:
+                        finalTotal
+                },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization:
+                            `Bearer ${token}`
                     }
                 }
             );
 
-            alert('Sale recorded successfully');
+            toast.success(
+                'Sale recorded successfully'
+            );
 
             // RESET FORM
             setFormData({
                 medicineId: '',
-                quantity: '',
-                totalPrice: ''
+                quantity: ''
             });
 
-            // REFRESH SALES
+            setSelectedMedicine(null);
+
+            setCashReceived('');
+
+            setTaxPercent(0);
+
             fetchSales();
             fetchMedicines();
 
@@ -118,52 +164,66 @@ function SalesSection() {
 
             console.error(error);
 
-            alert('Error recording sale');
+            toast.error(
+                'Error recording sale'
+            );
 
         }
     };
-
-    // FILTER SALES
-    const filteredSales = sales.filter(
-        (sale) =>
-
-            sale.medicine?.name
-                ?.toLowerCase()
-                .includes(searchTerm.toLowerCase())
-    );
 
     return (
 
         <div>
 
             {/* TITLE */}
-            <h2 className="text-2xl font-bold mb-6">
-                Sales Management
-            </h2>
+            <div className="flex justify-between items-center mb-6">
 
-            {/* SEARCH */}
-            <input
-                type="text"
-                placeholder="Search sales..."
-                value={searchTerm}
-                onChange={(e) =>
-                    setSearchTerm(e.target.value)
-                }
-                className="border p-3 rounded w-full mb-6"
-            />
+                <div>
+
+                    <h2 className="text-3xl font-bold">
+                        Sales Management
+                    </h2>
+
+                    <p className="text-gray-500">
+                        Pharmacy POS Billing System
+                    </p>
+
+                </div>
+
+            </div>
 
             {/* SALES FORM */}
             <form
                 onSubmit={handleSubmit}
-                className="space-y-4 mb-8"
+                className="space-y-5"
             >
 
-                {/* MEDICINE */}
+                {/* MEDICINE SELECT */}
                 <select
                     name="medicineId"
                     value={formData.medicineId}
+                    onChange={(e) => {
+
+                        const medicine =
+                            medicines.find(
+                                med =>
+                                    med.id ===
+                                    parseInt(
+                                        e.target.value
+                                    )
+                            );
+
+                        setSelectedMedicine(
+                            medicine
+                        );
+
+                        setFormData({
+                            ...formData,
+                            medicineId:
+                                e.target.value
+                        });
+                    }}
                     className="border p-3 w-full rounded"
-                    onChange={handleChange}
                 >
 
                     <option value="">
@@ -189,131 +249,245 @@ function SalesSection() {
                     name="quantity"
                     placeholder="Quantity"
                     value={formData.quantity}
-                    className="border p-3 w-full rounded"
                     onChange={handleChange}
+                    className="border p-3 w-full rounded"
                 />
 
-                {/* PRICE */}
-                <input
-                    type="number"
-                    name="totalPrice"
-                    placeholder="Total Price"
-                    value={formData.totalPrice}
-                    className="border p-3 w-full rounded"
-                    onChange={handleChange}
-                />
+                {/* BILLING SECTION */}
+                <div className="bg-gray-100 p-5 rounded-xl space-y-3">
 
-                {/* BUTTON */}
-                <button
-                    type="submit"
-                    className="bg-red-600 text-white px-5 py-3 rounded hover:bg-red-700"
-                >
-                    Record Sale
-                </button>
+                    <h3 className="text-xl font-bold">
+                        Billing Summary
+                    </h3>
+
+                    <p>
+                        Medicine Price:
+                        <strong>
+                            {' '}
+                            Rs.
+                            {
+                                selectedMedicine
+                                    ?.sellingPrice || 0
+                            }
+                        </strong>
+                    </p>
+
+                    <p>
+                        Subtotal:
+                        <strong>
+                            {' '}
+                            Rs. {subtotal}
+                        </strong>
+                    </p>
+
+                    {/* GST */}
+                    <div>
+
+                        <label className="block mb-2 font-medium">
+                            GST / Tax %
+                        </label>
+
+                        <input
+                            type="number"
+                            value={taxPercent}
+                            onChange={(e) =>
+                                setTaxPercent(
+                                    e.target.value
+                                )
+                            }
+                            className="border p-3 rounded w-full"
+                        />
+
+                    </div>
+
+                    <p>
+                        Tax Amount:
+                        <strong>
+                            {' '}
+                            Rs. {taxAmount}
+                        </strong>
+                    </p>
+
+                    <p className="text-2xl font-bold text-blue-700">
+                        Final Total:
+                        Rs. {finalTotal}
+                    </p>
+
+                </div>
+
+                {/* CASH RECEIVED */}
+                <div className="bg-green-50 p-5 rounded-xl space-y-3">
+
+                    <h3 className="text-xl font-bold">
+                        Payment
+                    </h3>
+
+                    <input
+                        type="number"
+                        placeholder="Cash Received"
+                        value={cashReceived}
+                        onChange={(e) =>
+                            setCashReceived(
+                                e.target.value
+                            )
+                        }
+                        className="border p-3 rounded w-full"
+                    />
+
+                    <div className="bg-white p-4 rounded shadow">
+
+                        <p className="text-2xl font-bold text-green-700">
+
+                            Balance Return:
+                            Rs.
+                            {balance >= 0
+                                ? balance
+                                : 0}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {/* BUTTONS */}
+                <div className="flex gap-4">
+
+                    <button
+                        type="submit"
+                        className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg"
+                    >
+                        Record Sale
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() =>
+                            window.print()
+                        }
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+                    >
+                        Print Invoice
+                    </button>
+
+                </div>
 
             </form>
 
-            {/* SALES TABLE */}
-            <div className="overflow-x-auto">
+            {/* RECENT SALES */}
+            <div className="mt-10">
 
-                <table className="w-full border">
+                <h2 className="text-2xl font-bold mb-5">
+                    Recent Sales
+                </h2>
 
-                    <thead className="bg-gray-200">
+                <div className="overflow-x-auto">
 
-                        <tr>
+                    <table className="w-full border">
 
-                            <th className="border p-3">
-                                ID
-                            </th>
+                        <thead className="bg-gray-200">
 
-                            <th className="border p-3">
-                                Medicine
-                            </th>
+                            <tr>
 
-                            <th className="border p-3">
-                                Quantity
-                            </th>
+                                <th className="p-3 border">
+                                    ID
+                                </th>
 
-                            <th className="border p-3">
-                                Total Price
-                            </th>
+                                <th className="p-3 border">
+                                    Medicine
+                                </th>
 
-                            <th className="border p-3">
-                                Date
-                            </th>
+                                <th className="p-3 border">
+                                    Quantity
+                                </th>
 
-                            <th className="border p-3">
-                                Invoice
-                            </th>
+                                <th className="p-3 border">
+                                    Total
+                                </th>
 
-                        </tr>
+                                <th className="p-3 border">
+                                    Date
+                                </th>
 
-                    </thead>
+                                <th className="p-3 border">
+                                    Invoice
+                                </th>
 
-                    <tbody>
+                            </tr>
 
-                        {filteredSales.length > 0 ? (
+                        </thead>
 
-                            filteredSales.map((sale) => (
+                        <tbody>
 
-                                <tr key={sale.id}>
+                            {sales.length > 0 ? (
 
-                                    <td className="border p-3">
-                                        {sale.id}
-                                    </td>
+                                sales.map((sale) => (
 
-                                    <td className="border p-3">
-                                        {sale.medicine?.name}
-                                    </td>
+                                    <tr key={sale.id}>
 
-                                    <td className="border p-3">
-                                        {sale.quantity}
-                                    </td>
+                                        <td className="border p-3">
+                                            {sale.id}
+                                        </td>
 
-                                    <td className="border p-3">
-                                        Rs. {sale.totalPrice}
-                                    </td>
+                                        <td className="border p-3">
+                                            {
+                                                sale.medicine
+                                                    ?.name
+                                            }
+                                        </td>
 
-                                    <td className="border p-3">
+                                        <td className="border p-3">
+                                            {sale.quantity}
+                                        </td>
 
-                                        {
-                                            new Date(
-                                                sale.saleDate
-                                            ).toLocaleDateString()
-                                        }
+                                        <td className="border p-3">
+                                            Rs.
+                                            {sale.totalPrice}
+                                        </td>
 
-                                    </td>
+                                        <td className="border p-3">
 
-                                    <td className="border p-3">
+                                            {
+                                                new Date(
+                                                    sale.saleDate
+                                                )
+                                                    .toLocaleDateString()
+                                            }
 
-                                        <InvoiceGenerator
-                                            sale={sale}
-                                        />
+                                        </td>
 
+                                        <td className="border p-3">
+
+                                            <InvoiceGenerator
+                                                sale={sale}
+                                            />
+
+                                        </td>
+
+                                    </tr>
+
+                                ))
+
+                            ) : (
+
+                                <tr>
+
+                                    <td
+                                        colSpan="6"
+                                        className="text-center p-5"
+                                    >
+                                        No sales found
                                     </td>
 
                                 </tr>
 
-                            ))
+                            )}
 
-                        ) : (
+                        </tbody>
 
-                            <tr>
+                    </table>
 
-                                <td
-                                    colSpan="6"
-                                    className="text-center p-5"
-                                >
-                                    No sales found
-                                </td>
-
-                            </tr>
-
-                        )}
-
-                    </tbody>
-
-                </table>
+                </div>
 
             </div>
 
