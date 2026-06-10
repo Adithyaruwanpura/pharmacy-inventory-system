@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 function PurchaseSection() {
     const [medicines, setMedicines] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
+    const [purchases, setPurchases] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const [formData, setFormData] = useState({
         medicineId: '',
@@ -33,6 +35,17 @@ function PurchaseSection() {
                     }
                 }
             );
+
+            const purchaseRes = await axios.get(
+                'http://localhost:5000/api/purchases',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setPurchases(purchaseRes.data.data);
 
             setMedicines(medicineRes.data.data);
             setSuppliers(supplierRes.data.data);
@@ -68,14 +81,116 @@ function PurchaseSection() {
                 quantity: '',
                 totalPrice: ''
             });
+            fetchData();
         } catch (error) {
             console.error(error);
             toast.error('Error adding purchase');
         }
     };
 
+    const deletePurchase = async (id) => {
+
+        try {
+
+            const token = localStorage.getItem('token');
+
+            await axios.delete(
+                `http://localhost:5000/api/purchases/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            toast.success('Purchase deleted');
+
+            fetchData();
+
+        } catch (error) {
+
+            console.error(error);
+
+            toast.error('Error deleting purchase');
+
+        }
+    };
+
+    const filteredPurchases = purchases.filter(
+        (purchase) =>
+
+            purchase.medicine?.name
+                ?.toLowerCase()
+                .includes(searchTerm.toLowerCase())
+
+            ||
+
+            purchase.supplier?.name
+                ?.toLowerCase()
+                .includes(searchTerm.toLowerCase())
+    );
+
     return (
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+                <div className="bg-blue-600 text-white p-5 rounded-xl">
+
+                    <h3 className="text-sm">
+                        Total Purchases
+                    </h3>
+
+                    <p className="text-3xl font-bold">
+                        {purchases.length}
+                    </p>
+
+                </div>
+
+                <div className="bg-green-600 text-white p-5 rounded-xl">
+
+                    <h3 className="text-sm">
+                        Total Purchase Cost
+                    </h3>
+
+                    <p className="text-3xl font-bold">
+
+                        Rs.
+
+                        {
+                            purchases.reduce(
+                                (total, purchase) =>
+                                    total + purchase.totalPrice,
+                                0
+                            )
+                        }
+
+                    </p>
+
+                </div>
+
+                <div className="bg-purple-600 text-white p-5 rounded-xl">
+
+                    <h3 className="text-sm">
+                        Suppliers
+                    </h3>
+
+                    <p className="text-3xl font-bold">
+                        {suppliers.length}
+                    </p>
+
+                </div>
+
+            </div>
+            <input
+                type="text"
+                placeholder="Search purchases..."
+                value={searchTerm}
+                onChange={(e) =>
+                    setSearchTerm(e.target.value)
+                }
+                className="border p-3 rounded-lg w-full mb-6"
+            />
             {/* LEFT INPUT COLUMN */}
             <form onSubmit={handleSubmit} className="p-6 lg:col-span-2 space-y-5">
                 <div className="border-b pb-2 border-gray-50">
@@ -202,6 +317,115 @@ function PurchaseSection() {
                 <div className="hidden lg:block text-[10px] text-gray-400 text-center mt-6">
                     Double check wholesale supplier parameters before archiving entry.
                 </div>
+            </div>
+            {/* PURCHASE HISTORY */}
+
+            <div className="mt-8 bg-white rounded-xl shadow border overflow-hidden">
+
+                <div className="p-5 border-b">
+
+                    <h2 className="text-xl font-bold">
+                        Purchase History
+                    </h2>
+
+                </div>
+
+                <div className="overflow-x-auto">
+
+                    <table className="w-full">
+
+                        <thead className="bg-gray-100">
+
+                            <tr>
+
+                                <th className="p-3 text-left">
+                                    Medicine
+                                </th>
+
+                                <th className="p-3 text-left">
+                                    Supplier
+                                </th>
+
+                                <th className="p-3 text-left">
+                                    Quantity
+                                </th>
+
+                                <th className="p-3 text-left">
+                                    Total Price
+                                </th>
+
+                                <th className="p-3 text-left">
+                                    Date
+                                </th>
+
+                                <th className="p-3 text-left">
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {filteredPurchases.map((purchase) => (
+
+                                <tr
+                                    key={purchase.id}
+                                    className="border-t hover:bg-gray-50"
+                                >
+
+                                    <td className="p-3">
+                                        {purchase.medicine?.name}
+                                    </td>
+
+                                    <td className="p-3">
+                                        {purchase.supplier?.name}
+                                    </td>
+
+                                    <td className="p-3">
+                                        {purchase.quantity}
+                                    </td>
+
+                                    <td className="p-3 font-semibold text-green-600">
+
+                                        Rs. {purchase.totalPrice}
+
+                                    </td>
+
+                                    <td className="p-3">
+
+                                        {
+                                            new Date(
+                                                purchase.purchaseDate
+                                            ).toLocaleDateString()
+                                        }
+
+                                    </td>
+
+                                    <td className="p-3">
+
+                                        <button
+                                            onClick={() =>
+                                                deletePurchase(purchase.id)
+                                            }
+                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            ))}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
             </div>
         </div>
     );

@@ -69,3 +69,62 @@ exports.getPurchases = async (req, res) => {
         });
     }
 };
+
+// DELETE PURCHASE
+exports.deletePurchase = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        // FIND PURCHASE
+        const purchase = await prisma.purchase.findUnique({
+            where: {
+                id: parseInt(id)
+            }
+        });
+
+        if (!purchase) {
+
+            return res.status(404).json({
+                success: false,
+                message: 'Purchase not found'
+            });
+
+        }
+
+        // REDUCE STOCK AGAIN
+        await prisma.medicine.update({
+            where: {
+                id: purchase.medicineId
+            },
+            data: {
+                quantity: {
+                    decrement: purchase.quantity
+                }
+            }
+        });
+
+        // DELETE PURCHASE
+        await prisma.purchase.delete({
+            where: {
+                id: parseInt(id)
+            }
+        });
+
+        res.json({
+            success: true,
+            message: 'Purchase deleted successfully'
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Error deleting purchase'
+        });
+
+    }
+};

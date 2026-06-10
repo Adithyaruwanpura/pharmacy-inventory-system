@@ -3,10 +3,12 @@ const router = express.Router();
 
 const {
     addPurchase,
-    getPurchases
+    getPurchases,
+    deletePurchase
 } = require('../controllers/purchaseController');
 
 router.post('/', addPurchase);
 router.get('/', getPurchases);
+router.delete('/:id', deletePurchase);
 
 module.exports = router;
