@@ -227,25 +227,25 @@ function SalesSection() {
                     </div>
 
                     {/* PAYMENT SECTION */}
-                    <div className="bg-white p-5 rounded-xl shadow-sm border border-emerald-100 bg-linear-to-b from-white to-emerald-50/10 space-y-3">
+                    <div className="bg-white p-5 rounded-xl shadow-sm border border-blue-100 bg-linear-to-b from-white to-blue-50/10 space-y-3">
                         <div className="flex items-center justify-between gap-4">
                             <div className="flex-1">
-                                <label className="block text-[11px] font-semibold text-emerald-800 uppercase tracking-wider mb-1">
+                                <label className="block text-[11px] font-semibold text-blue-800 uppercase tracking-wider mb-1">
                                     Cash Received
                                 </label>
                                 <div className="relative">
-                                    <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-emerald-600 font-medium text-xs">Rs.</span>
+                                    <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-blue-600 font-medium text-xs">Rs.</span>
                                     <input
                                         type="number"
                                         placeholder="0.00"
                                         value={cashReceived}
                                         onChange={(e) => setCashReceived(e.target.value)}
-                                        className="block w-full pl-8 border-emerald-200 rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm p-2 bg-white"
+                                        className="block w-full pl-8 border-blue-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm p-2 bg-white"
                                     />
                                 </div>
                             </div>
 
-                            <div className="bg-emerald-600 text-white p-2.5 rounded-lg shadow-sm text-right min-w-30 mt-4">
+                            <div className="bg-blue-600 text-white p-2.5 rounded-lg shadow-sm text-right min-w-30 mt-4">
                                 <span className="block text-[9px] font-bold uppercase tracking-wider opacity-80">Change Due</span>
                                 <span className="text-lg font-black">
                                     Rs. {(balance >= 0 ? balance : 0).toFixed(2)}

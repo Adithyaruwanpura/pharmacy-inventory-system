@@ -161,7 +161,7 @@ function PurchaseSection() {
                 <div className="pt-2">
                     <button
                         type="submit"
-                        className="bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-150 text-xs tracking-wide uppercase"
+                        className="bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-150 text-xs tracking-wide uppercase"
                     >
                         Add Purchase Order
                     </button>

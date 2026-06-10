@@ -49,7 +49,7 @@ function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-950 flex items-center justify-center px-4 relative overflow-hidden font-sans antialiased">
+        <div className="min-h-screen bg-linear-to-tr from-slate-900 via-indigo-950 to-slate-950 flex items-center justify-center px-4 relative overflow-hidden font-sans antialiased">
 
             {/* AMBIENT BACKGROUND GLOW BLOBS */}
             <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
@@ -63,10 +63,10 @@ function Login() {
                     <div className="text-center mb-8">
                         <div className="relative w-16 h-16 mx-auto mb-4 group">
                             {/* OUTER GLOWING BOUNDARY RING */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl blur opacity-40 group-hover:opacity-70 transition duration-500"></div>
+                            <div className="absolute inset-0 bg-linear-to-r from-blue-500 to-indigo-500 rounded-2xl blur opacity-40 group-hover:opacity-70 transition duration-500"></div>
                             {/* SOLID LOGO BODY CONTAINER */}
                             <div className="relative w-16 h-16 bg-slate-900 border border-slate-700/50 rounded-2xl flex items-center justify-center text-white font-extrabold text-xl tracking-wider">
-                                <span className="bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">MT</span>
+                                <span className="bg-linear-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">MT</span>
                             </div>
                         </div>
 
@@ -132,7 +132,7 @@ function Login() {
                         <div className="pt-2">
                             <button
                                 type="submit"
-                                className="w-full relative group overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-950/50 transition-all duration-300"
+                                className="w-full relative group overflow-hidden bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-950/50 transition-all duration-300"
                             >
                                 {/* REFLECT FLASH HIGHLIGHT ON HOVER */}
                                 <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-96 ease"></span>

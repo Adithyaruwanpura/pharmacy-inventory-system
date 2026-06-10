@@ -136,7 +136,7 @@ function SalesSection() {
                     {/* DISPENSE CTA */}
                     <button
                         type="submit"
-                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2.5 px-4 rounded-lg shadow-sm text-xs uppercase tracking-wide transition-all mt-2"
+                        className="w-full bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2.5 px-4 rounded-lg shadow-sm text-xs uppercase tracking-wide transition-all mt-2"
                     >
                         Process Invoice
                     </button>
@@ -144,7 +144,7 @@ function SalesSection() {
             </div>
 
             {/* RIGHT FRAME: INTERACTIVE TRANSACTION LEDGER */}
-            <div className="xl:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full max-h-[600px]">
+            <div className="xl:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full max-h-150">
 
                 {/* SEARCH/FILTER CONTROLS DECK */}
                 <div className="p-4 border-b border-gray-100 bg-white sm:flex sm:items-center sm:justify-between gap-4">
@@ -194,7 +194,7 @@ function SalesSection() {
                                         <td className="p-3 text-center font-mono font-medium text-gray-700">
                                             {sale.quantity}
                                         </td>
-                                        <td className="p-3 text-right pr-4 font-mono font-bold text-emerald-600">
+                                        <td className="p-3 text-right pr-4 font-mono font-bold text-blue-600">
                                             Rs. {Number(sale.totalPrice || 0).toFixed(2)}
                                         </td>
                                     </tr>
