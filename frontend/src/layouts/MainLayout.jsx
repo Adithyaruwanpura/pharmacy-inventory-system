@@ -154,7 +154,25 @@ function MainLayout() {
 
                             </li>
 
+
+
                         )}
+
+                        <li>
+
+                            <NavLink
+                                to="/expiry"
+                                className={({ isActive }) =>
+                                    `block p-3 rounded transition ${isActive
+                                        ? 'bg-white text-blue-900 font-bold'
+                                        : 'hover:bg-blue-700'
+                                    }`
+                                }
+                            >
+                                Expiry Management
+                            </NavLink>
+
+                        </li>
 
                     </ul>
 

@@ -12,6 +12,8 @@ function DashboardStats() {
         monthlyRevenue: 0
     });
 
+    const [expiredCount, setExpiredCount] = useState(0);
+
     const fetchStats = async () => {
 
         try {
@@ -42,6 +44,14 @@ function DashboardStats() {
             const lowStockRes = await axios.get(
                 'http://localhost:5000/api/inventory/low-stock',
                 config
+            );
+            const expiredRes = await axios.get(
+                'http://localhost:5000/api/expiry/expired',
+                config
+            );
+
+            setExpiredCount(
+                expiredRes.data.data.length
             );
 
             const sales = salesRes.data.data;
@@ -144,6 +154,17 @@ function DashboardStats() {
 
                 <p className="text-3xl font-bold mt-2">
                     {stats.lowStock}
+                </p>
+
+            </div>
+            <div className="bg-linear-to-r from-red-600 to-red-800 text-white p-5 rounded-2xl shadow-lg">
+
+                <h3 className="text-sm opacity-80">
+                    Expired Medicines
+                </h3>
+
+                <p className="text-3xl font-bold mt-2">
+                    {expiredCount}
                 </p>
 
             </div>

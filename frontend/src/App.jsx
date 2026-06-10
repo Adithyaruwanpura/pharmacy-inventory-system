@@ -15,7 +15,7 @@ import Sales from './pages/Sales';
 import Alerts from './pages/Alerts';
 import SalesReports from './pages/SalesReports';
 import { ToastContainer } from 'react-toastify';
-
+import Expiry from './pages/Expiry';
 import MainLayout from './layouts/MainLayout';
 
 function App() {
@@ -95,6 +95,10 @@ function App() {
                 <SalesReports />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/expiry"
+            element={<Expiry />}
           />
 
         </Route>

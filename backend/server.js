@@ -12,7 +12,9 @@ const purchaseRoutes = require('./routes/purchaseRoutes');
 const salesRoutes = require('./routes/salesRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const authRoutes = require('./routes/authRoutes');
+const expiryRoutes = require('./routes/expiryRoutes');
 
+app.use('/api/expiry', expiryRoutes);
 app.use('/api/medicines', medicineRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/purchases', purchaseRoutes);
