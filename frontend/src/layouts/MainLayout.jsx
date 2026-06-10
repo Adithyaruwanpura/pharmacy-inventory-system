@@ -26,7 +26,7 @@ function MainLayout() {
                 <div>
 
                     <h2 className="text-2xl font-bold mb-10">
-                        Pharmacy System
+                        MediTrack
                     </h2>
 
                     <ul className="space-y-3">

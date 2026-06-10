@@ -23,8 +23,15 @@ function SupplierSection() {
 
         try {
 
+            const token = localStorage.getItem('token');
+
             const response = await axios.get(
-                'http://localhost:5000/api/suppliers'
+                'http://localhost:5000/api/suppliers',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
 
             setSuppliers(response.data.data);
@@ -71,12 +78,21 @@ function SupplierSection() {
 
         try {
 
+            const token = localStorage.getItem('token');
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+
             // UPDATE
             if (selectedSupplier) {
 
                 await axios.put(
                     `http://localhost:5000/api/suppliers/${selectedSupplier.id}`,
-                    formData
+                    formData,
+                    config
                 );
 
                 toast.success('Supplier updated successfully');
@@ -88,14 +104,14 @@ function SupplierSection() {
 
                 await axios.post(
                     'http://localhost:5000/api/suppliers',
-                    formData
+                    formData,
+                    config
                 );
 
                 toast.success('Supplier added successfully');
 
             }
 
-            // RESET
             setFormData({
                 name: '',
                 contact: '',
@@ -110,7 +126,10 @@ function SupplierSection() {
 
             console.error(error);
 
-            toast.error('Error saving supplier');
+            toast.error(
+                error.response?.data?.message ||
+                'Error saving supplier'
+            );
 
         }
     };
@@ -126,8 +145,15 @@ function SupplierSection() {
 
         try {
 
+            const token = localStorage.getItem('token');
+
             await axios.delete(
-                `http://localhost:5000/api/suppliers/${id}`
+                `http://localhost:5000/api/suppliers/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
 
             toast.success('Supplier deleted successfully');
@@ -138,7 +164,10 @@ function SupplierSection() {
 
             console.error(error);
 
-            toast.error('Error deleting supplier');
+            toast.error(
+                error.response?.data?.message ||
+                'Error deleting supplier'
+            );
 
         }
     };

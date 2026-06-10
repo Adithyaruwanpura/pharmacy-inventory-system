@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const roleMiddleware =
-    require('../middleware/roleMiddleware');
 
 const {
     addSupplier,
@@ -9,30 +7,43 @@ const {
     updateSupplier,
     deleteSupplier
 } = require('../controllers/supplierController');
-const authMiddleware = require('../middleware/authMiddleware');
+
+const authMiddleware =
+    require('../middleware/authMiddleware');
+
+const roleMiddleware =
+    require('../middleware/roleMiddleware');
 
 
-//router.post('/', authMiddleware, addSupplier);
-router.get('/', getSuppliers);
-//router.put('/:id', authMiddleware, updateSupplier);
-//router.delete('/:id', authMiddleware, deleteSupplier);
-router.delete(
-    '/:id',
+// GET ALL SUPPLIERS
+router.get(
+    '/',
+    authMiddleware,
+    getSuppliers
+);
+
+// ADD SUPPLIER
+router.post(
+    '/',
     authMiddleware,
     roleMiddleware('admin'),
-    deleteSupplier
+    addSupplier
 );
+
+// UPDATE SUPPLIER
 router.put(
     '/:id',
     authMiddleware,
     roleMiddleware('admin'),
     updateSupplier
 );
-router.post(
+
+// DELETE SUPPLIER
+router.delete(
     '/:id',
     authMiddleware,
     roleMiddleware('admin'),
-    addSupplier
+    deleteSupplier
 );
 
 module.exports = router;
