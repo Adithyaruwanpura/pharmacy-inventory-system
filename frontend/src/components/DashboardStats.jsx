@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function DashboardStats() {
-
     const [stats, setStats] = useState({
         medicines: 0,
         suppliers: 0,
@@ -11,74 +10,34 @@ function DashboardStats() {
         todayRevenue: 0,
         monthlyRevenue: 0
     });
-
     const [expiredCount, setExpiredCount] = useState(0);
 
     const fetchStats = async () => {
-
         try {
-
             const token = localStorage.getItem('token');
+            const config = { headers: { Authorization: `Bearer ${token}` } };
 
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            };
+            const medicineRes = await axios.get('http://localhost:5000/api/medicines', config);
+            const supplierRes = await axios.get('http://localhost:5000/api/suppliers', config);
+            const salesRes = await axios.get('http://localhost:5000/api/sales', config);
+            const lowStockRes = await axios.get('http://localhost:5000/api/inventory/low-stock', config);
+            const expiredRes = await axios.get('http://localhost:5000/api/expiry/expired', config);
 
-            const medicineRes = await axios.get(
-                'http://localhost:5000/api/medicines',
-                config
-            );
-
-            const supplierRes = await axios.get(
-                'http://localhost:5000/api/suppliers',
-                config
-            );
-
-            const salesRes = await axios.get(
-                'http://localhost:5000/api/sales',
-                config
-            );
-
-            const lowStockRes = await axios.get(
-                'http://localhost:5000/api/inventory/low-stock',
-                config
-            );
-            const expiredRes = await axios.get(
-                'http://localhost:5000/api/expiry/expired',
-                config
-            );
-
-            setExpiredCount(
-                expiredRes.data.data.length
-            );
-
+            setExpiredCount(expiredRes.data.data.length);
             const sales = salesRes.data.data;
 
-            // TODAY DATE
             const today = new Date().toDateString();
-
-            // CURRENT MONTH
             const currentMonth = new Date().getMonth();
             const currentYear = new Date().getFullYear();
 
-            // TODAY REVENUE
             const todayRevenue = sales
-                .filter(sale =>
-                    new Date(sale.saleDate).toDateString() === today
-                )
+                .filter(sale => new Date(sale.saleDate).toDateString() === today)
                 .reduce((total, sale) => total + sale.totalPrice, 0);
 
-            // MONTHLY REVENUE
             const monthlyRevenue = sales
                 .filter(sale => {
                     const saleDate = new Date(sale.saleDate);
-
-                    return (
-                        saleDate.getMonth() === currentMonth &&
-                        saleDate.getFullYear() === currentYear
-                    );
+                    return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
                 })
                 .reduce((total, sale) => total + sale.totalPrice, 0);
 
@@ -90,109 +49,63 @@ function DashboardStats() {
                 todayRevenue,
                 monthlyRevenue
             });
-
         } catch (error) {
-
             console.error(error);
-
         }
     };
 
-    useEffect(() => {
-        fetchStats();
-    }, []);
+    useEffect(() => { fetchStats(); }, []);
 
     return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-5 mb-8">
-
-            {/* MEDICINES */}
-            <div className="bg-linear-to-r from-blue-500 to-blue-700 text-white p-5 rounded-2xl shadow-lg">
-
-                <h3 className="text-sm opacity-80">
-                    Total Medicines
-                </h3>
-
-                <p className="text-3xl font-bold mt-2">
-                    {stats.medicines}
-                </p>
-
+            {/* CARD: TOTAL MEDICINES */}
+            <div className="bg-white border border-gray-200/80 p-5 rounded-2xl shadow-xs relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-600" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">Total Meds</h3>
+                <p className="text-3xl font-black text-gray-900 mt-2 font-mono tracking-tight">{stats.medicines}</p>
             </div>
 
-            {/* SUPPLIERS */}
-            <div className="bg-linear-to-r from-green-500 to-green-700 text-white p-5 rounded-2xl shadow-lg">
-
-                <h3 className="text-sm opacity-80">
-                    Suppliers
-                </h3>
-
-                <p className="text-3xl font-bold mt-2">
-                    {stats.suppliers}
-                </p>
-
+            {/* CARD: SUPPLIERS */}
+            <div className="bg-white border border-gray-200/80 p-5 rounded-2xl shadow-xs relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-600" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">Suppliers</h3>
+                <p className="text-3xl font-black text-gray-900 mt-2 font-mono tracking-tight">{stats.suppliers}</p>
             </div>
 
-            {/* SALES */}
-            <div className="bg-linear-to-r from-red-500 to-red-700 text-white p-5 rounded-2xl shadow-lg">
-
-                <h3 className="text-sm opacity-80">
-                    Total Sales
-                </h3>
-
-                <p className="text-3xl font-bold mt-2">
-                    {stats.sales}
-                </p>
-
+            {/* CARD: TOTAL SALES */}
+            <div className="bg-white border border-gray-200/80 p-5 rounded-2xl shadow-xs relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-600" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">Total Sales</h3>
+                <p className="text-3xl font-black text-gray-900 mt-2 font-mono tracking-tight">{stats.sales}</p>
             </div>
 
-            {/* LOW STOCK */}
-            <div className="bg-linear-to-r from-yellow-400 to-yellow-600 text-white p-5 rounded-2xl shadow-lg">
-
-                <h3 className="text-sm opacity-80">
-                    Low Stock
-                </h3>
-
-                <p className="text-3xl font-bold mt-2">
-                    {stats.lowStock}
-                </p>
-
-            </div>
-            <div className="bg-linear-to-r from-red-600 to-red-800 text-white p-5 rounded-2xl shadow-lg">
-
-                <h3 className="text-sm opacity-80">
-                    Expired Medicines
-                </h3>
-
-                <p className="text-3xl font-bold mt-2">
-                    {expiredCount}
-                </p>
-
+            {/* CARD: LOW STOCK */}
+            <div className={`bg-white border p-5 rounded-2xl shadow-xs relative overflow-hidden ${stats.lowStock > 0 ? 'border-amber-200 bg-amber-50/20' : 'border-gray-200/80'}`}>
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-amber-500" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">Low Stock</h3>
+                <p className={`text-3xl font-black mt-2 font-mono tracking-tight ${stats.lowStock > 0 ? 'text-amber-600' : 'text-gray-900'}`}>{stats.lowStock}</p>
             </div>
 
-            {/* TODAY REVENUE */}
-            <div className="bg-linear-to-r from-purple-500 to-purple-700 text-white p-5 rounded-2xl shadow-lg">
-
-                <h3 className="text-sm opacity-80">
-                    Today Revenue
-                </h3>
-
-                <p className="text-2xl font-bold mt-2">
-                    Rs. {stats.todayRevenue}
-                </p>
-
+            {/* CARD: EXPIRED */}
+            <div className={`bg-white border p-5 rounded-2xl shadow-xs relative overflow-hidden ${expiredCount > 0 ? 'border-red-200 bg-red-50/20 animate-pulse' : 'border-gray-200/80'}`}>
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-red-600" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">Expired</h3>
+                <p className={`text-3xl font-black mt-2 font-mono tracking-tight ${expiredCount > 0 ? 'text-red-600' : 'text-gray-900'}`}>{expiredCount}</p>
             </div>
 
-            {/* MONTHLY REVENUE */}
-            <div className="bg-linear-to-r from-pink-500 to-pink-700 text-white p-5 rounded-2xl shadow-lg">
+            {/* CARD: TODAY REVENUE */}
+            <div className="bg-white border border-gray-200/80 p-5 rounded-2xl shadow-xs relative overflow-hidden sm:col-span-2 lg:col-span-1">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-violet-600" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">Today Rev</h3>
+                <p className="text-xl font-bold text-gray-900 mt-2 font-mono tracking-tight">Rs. {stats.todayRevenue.toLocaleString()}</p>
+            </div>
 
-                <h3 className="text-sm opacity-80">
-                    Monthly Revenue
-                </h3>
-
-                <p className="text-2xl font-bold mt-2">
-                    Rs. {stats.monthlyRevenue}
-                </p>
-
+            {/* CARD: MONTHLY REVENUE */}
+            <div className="bg-white border border-gray-200/80 p-5 rounded-2xl shadow-xs relative overflow-hidden sm:col-span-2 lg:col-span-1">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-fuchsia-600" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">Monthly Rev</h3>
+                <p className="text-xl font-bold text-gray-900 mt-2 font-mono tracking-tight">Rs. {stats.monthlyRevenue.toLocaleString()}</p>
             </div>
 
         </div>

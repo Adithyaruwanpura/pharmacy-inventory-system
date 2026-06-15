@@ -1,122 +1,67 @@
 import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    PieChart,
-    Pie,
-    Cell,
-    Legend
+    BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+    PieChart, Pie, Cell, Legend
 } from 'recharts';
 
-function AnalyticsCharts({
-    medicines,
-    sales
-}) {
-
-    // STOCK CHART DATA
+function AnalyticsCharts({ medicines, sales }) {
     const stockData = medicines.map((medicine) => ({
         name: medicine.name,
         quantity: medicine.quantity
     }));
 
-    // SALES CHART DATA
     const salesData = sales.map((sale) => ({
         name: sale.medicine?.name || 'Unknown',
         amount: sale.totalPrice
     }));
 
-    // PIE COLORS
-    const COLORS = [
-        '#0088FE',
-        '#00C49F',
-        '#FFBB28',
-        '#FF8042',
-        '#A020F0'
-    ];
+    // Realigned with your exact theme blue accent color
+    const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#a855f7'];
 
     return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-            {/* STOCK BAR CHART */}
-            <div className="bg-white p-6 rounded shadow">
-
-                <h2 className="text-xl font-bold mb-4">
+            {/* MEDICINE STOCK LEVELS BAR CHART */}
+            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <h2 className="text-lg font-bold text-gray-800 mb-4">
                     Medicine Stock Levels
                 </h2>
-
-                <ResponsiveContainer
-                    width="100%"
-                    height={300}
-                >
-
-                    <BarChart data={stockData}>
-
-                        <XAxis dataKey="name" />
-
-                        <YAxis />
-
-                        <Tooltip />
-
-                        <Bar
-                            dataKey="quantity"
-                            fill="#2563eb"
-                        />
-
-                    </BarChart>
-
-                </ResponsiveContainer>
-
+                <div className="w-full h-75">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={stockData} margin={{ left: -20, right: 10 }}>
+                            <XAxis dataKey="name" stroke="#9ca3af" fontSize={12} tickLine={false} />
+                            <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} />
+                            <Tooltip cursor={{ fill: '#f3f4f6' }} />
+                            <Bar dataKey="quantity" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
 
-            {/* SALES PIE CHART */}
-            <div className="bg-white p-6 rounded shadow">
-
-                <h2 className="text-xl font-bold mb-4">
+            {/* SALES DISTRIBUTION PIE CHART */}
+            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <h2 className="text-lg font-bold text-gray-800 mb-4">
                     Sales Distribution
                 </h2>
-
-                <ResponsiveContainer
-                    width="100%"
-                    height={300}
-                >
-
-                    <PieChart>
-
-                        <Pie
-                            data={salesData}
-                            dataKey="amount"
-                            nameKey="name"
-                            outerRadius={100}
-                            label
-                        >
-
-                            {salesData.map((entry, index) => (
-
-                                <Cell
-                                    key={index}
-                                    fill={
-                                        COLORS[
-                                        index % COLORS.length
-                                        ]
-                                    }
-                                />
-
-                            ))}
-
-                        </Pie>
-
-                        <Tooltip />
-
-                        <Legend />
-
-                    </PieChart>
-
-                </ResponsiveContainer>
-
+                <div className="w-full h-75">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie
+                                data={salesData}
+                                dataKey="amount"
+                                nameKey="name"
+                                outerRadius={90}
+                                innerRadius={55}
+                                paddingAngle={2}
+                            >
+                                {salesData.map((entry, index) => (
+                                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
 
         </div>
