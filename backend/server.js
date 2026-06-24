@@ -13,6 +13,7 @@ const salesRoutes = require('./routes/salesRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const authRoutes = require('./routes/authRoutes');
 const expiryRoutes = require('./routes/expiryRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 app.use('/api/expiry', expiryRoutes);
 app.use('/api/medicines', medicineRoutes);
@@ -21,6 +22,7 @@ app.use('/api/purchases', purchaseRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/payments', paymentRoutes);
 
 app.get('/', (req, res) => {
     res.send('Pharmacy Inventory API Running...');

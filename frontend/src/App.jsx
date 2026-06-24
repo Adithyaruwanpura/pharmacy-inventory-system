@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 
 import Dashboard from './pages/Dashboard';
@@ -26,8 +27,10 @@ function App() {
 
       <Routes>
 
+        <Route path="/" element={<LandingPage />} />
+
         {/* LOGIN */}
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
 
         {/* DASHBOARD LAYOUT */}
         <Route element={<MainLayout />}>

@@ -219,8 +219,8 @@ function SupplierSection() {
                             <button
                                 type="submit"
                                 className={`w-full text-white font-semibold py-2 px-4 rounded-lg shadow-sm text-xs uppercase tracking-wide transition-all ${selectedSupplier
-                                    ? 'bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600'
-                                    : 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600'
+                                    ? 'bg-linear-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600'
+                                    : 'bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600'
                                     }`}
                             >
                                 {selectedSupplier ? 'Save Changes' : 'Commit Entry'}
@@ -276,7 +276,7 @@ function SupplierSection() {
                                                     {supplier.contact}
                                                 </span>
                                             </td>
-                                            <td className="p-3 text-gray-500 max-w-[180px] truncate">
+                                            <td className="p-3 text-gray-500 max-w-45 truncate">
                                                 {supplier.address}
                                             </td>
                                             <td className="p-3 pr-4 text-right whitespace-nowrap space-x-2">

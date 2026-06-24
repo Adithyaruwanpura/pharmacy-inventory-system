@@ -34,6 +34,8 @@ model Supplier {
   contact String
   address String
 
+ balanceDue Float    @default(0)
+
   purchases Purchase[]
 }
 
