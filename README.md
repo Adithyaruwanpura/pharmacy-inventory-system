@@ -1,4 +1,4 @@
-# 💊 Pharmacy Inventory Management System
+# MediTrack - Pharmacy Inventory Management System
 
 A full-stack Pharmacy Inventory Management System designed to streamline inventory tracking, supplier management, sales processing, and business reporting.
 
