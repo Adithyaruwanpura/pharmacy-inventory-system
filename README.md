@@ -1,7 +1,8 @@
 # 💊 Pharmacy Inventory Management System
 
 A full-stack Pharmacy Inventory Management System designed to streamline inventory tracking, supplier management, sales processing, and business reporting.
-📌 Overview
+
+# 📌 Overview
 
 This system helps pharmacies efficiently manage medicines, suppliers, purchases, sales, payments, and inventory while providing real-time business insights through dashboards and reports.
 
