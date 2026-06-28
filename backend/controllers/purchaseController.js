@@ -10,9 +10,17 @@ exports.addPurchase = async (req, res) => {
             totalPrice
         } = req.body;
 
+
+        const purchaseCount = await prisma.purchase.count();
+
+        const invoiceNo = `INV-${String(purchaseCount + 1).padStart(5, '0')}`;
+        const grnNo = `GRN-${String(purchaseCount + 1).padStart(5, '0')}`;
         // CREATE PURCHASE RECORD
         const purchase = await prisma.purchase.create({
             data: {
+                invoiceNo,
+                grnNo,
+
                 medicineId: parseInt(medicineId),
                 supplierId: parseInt(supplierId),
                 quantity: parseInt(quantity),

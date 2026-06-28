@@ -15,17 +15,17 @@ model User {
 }
 
 model Medicine {
-  id             Int      @id @default(autoincrement())
-  name           String
-  category       String
-  batchNumber    String
-  expiryDate     DateTime
-  purchasePrice  Float
-  sellingPrice   Float
-  quantity       Int
+  id            Int      @id @default(autoincrement())
+  name          String
+  category      String
+  batchNumber   String
+  expiryDate    DateTime
+  purchasePrice Float
+  sellingPrice  Float
+  quantity      Int
 
   purchases Purchase[]
-  sales Sale[]
+  sales     Sale[]
 }
 
 model Supplier {
@@ -34,21 +34,31 @@ model Supplier {
   contact String
   address String
 
- balanceDue Float    @default(0)
+  balanceDue Float @default(0)
 
   purchases Purchase[]
 }
 
 model Purchase {
-  id          Int      @id @default(autoincrement())
-  medicineId  Int
-  supplierId  Int
-  quantity    Int
-  totalPrice  Float
+  id           Int      @id @default(autoincrement())
+  invoiceNo String? @unique
+  grnNo String? @unique
+  medicineId   Int
+  supplierId   Int
+  quantity     Int
+  totalPrice   Float
   purchaseDate DateTime @default(now())
+
+  paymentStatus String @default("Pending")
+
+  paidAmount Float @default(0)
+
+  balanceAmount Float @default(0)
 
   medicine Medicine @relation(fields: [medicineId], references: [id])
   supplier Supplier @relation(fields: [supplierId], references: [id])
+
+  payments Payment[]
 }
 
 model Sale {
@@ -59,4 +69,15 @@ model Sale {
   saleDate   DateTime @default(now())
 
   medicine Medicine @relation(fields: [medicineId], references: [id])
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  purchaseId    Int
+  amount        Float
+  paymentDate   DateTime @default(now())
+  paymentMethod String
+  note          String?
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id])
 }

@@ -1,1 +1,0 @@
-Full-stack Pharmacy Inventory & Sales Management System built with React, Node.js, Express, PostgreSQL, and Prisma ORM featuring inventory tracking, supplier management, analytics dashboard, invoice generation, and secure JWT authentication.

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function LandingPage() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 selection:bg-blue-600 selection:text-white overflow-x-hidden antialiased">
+        <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 selection:bg-blue-600 selection:text-white overflow-x-hidden antialiased">
 
             {/* Top Navigation Bar */}
             <nav className="border-b border-white/5 bg-slate-950/60 backdrop-blur-md sticky top-0 z-50">
@@ -43,7 +43,7 @@ function LandingPage() {
 
                         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight">
                             Pharmacy <br />
-                            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                            <span className="bg-linear-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                                 Inventory Management
                             </span>
                         </h1>
@@ -69,7 +69,7 @@ function LandingPage() {
 
                     {/* Right Column: Clean Image Showcase Frame */}
                     <div className="lg:col-span-5 relative">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-emerald-500/5 to-transparent rounded-3xl filter blur-xl" />
+                        <div className="absolute inset-0 bg-linear-to-tr from-blue-500/10 via-emerald-500/5 to-transparent rounded-3xl filter blur-xl" />
                         <div className="border border-white/10 rounded-2xl overflow-hidden shadow-2xl p-2 bg-slate-900/40 backdrop-blur-xs">
                             <img
                                 src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88"

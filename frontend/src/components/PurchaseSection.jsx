@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import PurchaseInvoiceGenerator from "./PurchaseInvoiceGenerator";
 
 function PurchaseSection() {
     const [medicines, setMedicines] = useState([]);
@@ -8,12 +9,17 @@ function PurchaseSection() {
     const [purchases, setPurchases] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
+
     const [formData, setFormData] = useState({
         medicineId: '',
         supplierId: '',
         quantity: '',
-        totalPrice: ''
+        unitPrice: ''
     });
+
+    const totalPrice =
+        Number(formData.quantity || 0) *
+        Number(formData.unitPrice || 0);
 
     const fetchData = async () => {
         try {
@@ -53,6 +59,7 @@ function PurchaseSection() {
         }
     };
 
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -66,23 +73,38 @@ function PurchaseSection() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
+
+            const token = localStorage.getItem("token");
+
             await axios.post(
-                'http://localhost:5000/api/purchases',
-                formData
+                "http://localhost:5000/api/purchases",
+                {
+                    ...formData,
+                    totalPrice: totalPrice
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
-            toast.success('Purchase added successfully');
+
+            toast.success("Purchase added successfully");
 
             setFormData({
-                medicineId: '',
-                supplierId: '',
-                quantity: '',
-                totalPrice: ''
+                medicineId: "",
+                supplierId: "",
+                quantity: "",
+                unitPrice: ""
             });
+
             fetchData();
+
         } catch (error) {
             console.error(error);
-            toast.error('Error adding purchase');
+            toast.error("Error adding purchase");
         }
     };
 
@@ -217,21 +239,56 @@ function PurchaseSection() {
                         </div>
 
                         {/* TOTAL COST */}
+                        {/* UNIT PRICE */}
+
                         <div>
+
                             <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
-                                Total Net Price
+                                Unit Price
                             </label>
+
                             <div className="relative">
-                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 font-semibold text-xs">Rs.</span>
+
+                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-xs">
+                                    Rs.
+                                </span>
+
                                 <input
                                     type="number"
-                                    name="totalPrice"
+                                    name="unitPrice"
                                     placeholder="0.00"
-                                    value={formData.totalPrice}
-                                    className="block w-full pl-10 border border-gray-200 rounded-xl shadow-xs focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 text-sm p-3 bg-gray-50 transition-all"
+                                    value={formData.unitPrice}
                                     onChange={handleChange}
+                                    className="block w-full pl-10 border border-gray-200 rounded-xl p-3 bg-gray-50"
                                 />
+
                             </div>
+
+                        </div>
+
+                        {/* TOTAL PRICE */}
+
+                        <div>
+
+                            <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+                                Total Cost
+                            </label>
+
+                            <div className="relative">
+
+                                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-xs">
+                                    Rs.
+                                </span>
+
+                                <input
+                                    type="number"
+                                    value={totalPrice}
+                                    readOnly
+                                    className="block w-full pl-10 border border-gray-200 rounded-xl p-3 bg-gray-100 font-bold text-green-600"
+                                />
+
+                            </div>
+
                         </div>
                     </div>
 
@@ -270,7 +327,7 @@ function PurchaseSection() {
                             <div className="flex justify-between pt-1">
                                 <span className="text-slate-400 font-sans font-bold">Total Ledger:</span>
                                 <span className="text-emerald-400 font-bold text-sm">
-                                    Rs. {formData.totalPrice ? Number(formData.totalPrice).toFixed(2) : '0.00'}
+                                    Rs. {totalPrice.toFixed(2)}
                                 </span>
                             </div>
                         </div>
@@ -280,6 +337,7 @@ function PurchaseSection() {
                         Double check wholesale supplier parameters before archiving entry.
                     </div>
                 </div>
+
             </div>
 
             {/* PURCHASE HISTORY TABLE LISTING */}
@@ -307,11 +365,15 @@ function PurchaseSection() {
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 text-[11px] font-bold uppercase tracking-wider">
+                                    <th className="py-3.5 px-5">Invoice</th>
+                                    <th className="py-3.5 px-5">GRN</th>
                                     <th className="py-3.5 px-5">Medicine</th>
                                     <th className="py-3.5 px-5">Supplier</th>
                                     <th className="py-3.5 px-5">Quantity</th>
+                                    <th className="py-3 px-5">Unit Price</th>
                                     <th className="py-3.5 px-5">Total Price</th>
                                     <th className="py-3.5 px-5">Date</th>
+                                    <th className="py-3.5 px-5 text-center">Invoice PDF</th>
                                     <th className="py-3.5 px-5 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -319,30 +381,55 @@ function PurchaseSection() {
                             <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
                                 {filteredPurchases.length > 0 ? (
                                     filteredPurchases.map((purchase) => (
-                                        <tr key={purchase.id} className="hover:bg-gray-50/70 transition-colors">
-                                            <td className="py-3.5 px-5 font-medium text-gray-900">
-                                                {purchase.medicine?.name || 'Unknown Medicine'}
+                                        <tr
+                                            key={purchase.id}
+                                            className="hover:bg-gray-50 transition"
+                                        >
+
+                                            <td className="py-3 px-5 font-semibold text-blue-600">
+                                                {purchase.invoiceNo}
                                             </td>
-                                            <td className="py-3.5 px-5 text-gray-600">
-                                                {purchase.supplier?.name || 'Unknown Supplier'}
+
+                                            <td className="py-3 px-5 font-semibold text-green-600">
+                                                {purchase.grnNo}
                                             </td>
-                                            <td className="py-3.5 px-5 font-mono text-gray-600">
+
+                                            <td className="py-3 px-5">
+                                                {purchase.medicine?.name}
+                                            </td>
+
+                                            <td className="py-3 px-5">
+                                                {purchase.supplier?.name}
+                                            </td>
+
+                                            <td className="py-3 px-5">
                                                 {purchase.quantity}
                                             </td>
-                                            <td className="py-3.5 px-5 font-semibold text-emerald-600">
-                                                Rs. {purchase.totalPrice?.toLocaleString()}
+                                            <td className="py-3 px-5">
+                                                Rs. {(purchase.totalPrice / purchase.quantity).toFixed(2)}
                                             </td>
-                                            <td className="py-3.5 px-5 text-gray-500 text-xs">
-                                                {purchase.purchaseDate ? new Date(purchase.purchaseDate).toLocaleDateString() : 'N/A'}
+
+                                            <td className="py-3 px-5 font-semibold text-emerald-600">
+                                                Rs. {purchase.totalPrice.toLocaleString()}
                                             </td>
-                                            <td className="py-3.5 px-5 text-right">
+
+                                            <td className="py-3 px-5">
+                                                {new Date(purchase.purchaseDate).toLocaleDateString()}
+                                            </td>
+
+                                            <td className="py-3 px-5 text-center">
+                                                <PurchaseInvoiceGenerator purchase={purchase} />
+                                            </td>
+
+                                            <td className="py-3 px-5 text-right">
                                                 <button
                                                     onClick={() => deletePurchase(purchase.id)}
-                                                    className="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+                                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                                                 >
                                                     Delete
                                                 </button>
                                             </td>
+
                                         </tr>
                                     ))
                                 ) : (
